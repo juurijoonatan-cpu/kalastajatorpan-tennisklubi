@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# Original Claude design export (kept locally, not deployed)
+Kalastajatorpan Tennisklubi.dc.html
+support.js
+image-slot.js
+.thumbnail
+
+# Design scratch / source uploads (heavy, not part of the site)
+uploads/
