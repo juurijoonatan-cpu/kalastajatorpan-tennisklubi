@@ -89,34 +89,25 @@
   .review-name{font-size:13px;color:#f2ebdd;margin-top:auto;}
   .review-name span{color:#8a8478;}
 
-  /* interactive aerial map markers */
+  /* interactive aerial map — mini spinning tennis-ball markers */
   .map-figure{position:relative;}
-  .map-marker{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:rgba(169,78,43,0.94);color:#fff;border:2px solid rgba(242,235,221,0.92);font-family:'Playfair Display',serif;font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.45);transition:transform .25s ease,background .25s ease;z-index:2;padding:0;}
-  .map-marker:hover,.map-marker.active{background:#c8683c;transform:translate(-50%,-50%) scale(1.18);z-index:4;}
-  .map-marker::before{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid rgba(200,104,60,0.75);opacity:0;}
-  .map-marker:hover::before,.map-marker.active::before{animation:mk-pulse 1.6s ease-out infinite;}
-  @keyframes mk-pulse{0%{transform:scale(0.7);opacity:.8;}100%{transform:scale(1.7);opacity:0;}}
-  .mk-tip{position:absolute;bottom:calc(100% + 9px);left:50%;transform:translateX(-50%);white-space:nowrap;background:#0d0d0b;color:#f2ebdd;font-family:'Archivo',sans-serif;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:3px;opacity:0;pointer-events:none;transition:opacity .2s ease;box-shadow:0 6px 18px rgba(0,0,0,0.4);}
-  .map-marker:hover .mk-tip,.map-marker.active .mk-tip{opacity:1;}
-  .facility{transition:background .25s ease;border-radius:4px;}
-  .facility.hl{background:rgba(199,122,84,0.16);}
+  .ball-marker{position:absolute;transform:translate(-50%,-50%);width:clamp(26px,2.5vw,36px);height:clamp(26px,2.5vw,36px);border-radius:50%;cursor:pointer;padding:0;border:1.5px solid rgba(255,255,255,0.85);background:radial-gradient(circle at 34% 30%,#eef86a 0%,#d3e24f 38%,#a9bb3c 72%,#7f8f2c 100%);box-shadow:0 3px 10px rgba(0,0,0,0.55),inset -3px -4px 8px rgba(60,70,20,0.5),inset 2px 3px 6px rgba(255,255,255,0.55);transition:transform .25s ease,box-shadow .25s ease;z-index:2;}
+  .ball-marker .seam{position:absolute;inset:0;background:center/86% no-repeat url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cg%20fill='none'%20stroke='%23f6f6ee'%20stroke-width='6'%20stroke-linecap='round'%3E%3Cpath%20d='M50%206%20C24%2028%2024%2072%2050%2094'/%3E%3Cpath%20d='M50%206%20C76%2028%2076%2072%2050%2094'/%3E%3C/g%3E%3C/svg%3E");animation:ball-spin 5s linear infinite;}
+  .ball-marker .lbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-weight:700;font-size:clamp(10px,1vw,13px);color:#2c3212;text-shadow:0 1px 2px rgba(255,255,255,0.7);z-index:2;}
+  .ball-marker .lbl svg{width:54%;height:54%;stroke:#2c3212;}
+  @keyframes ball-spin{to{transform:rotate(360deg);}}
+  .ball-marker::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(238,248,106,0.8);opacity:0;pointer-events:none;}
+  .ball-marker:hover,.ball-marker:focus-visible{transform:translate(-50%,-50%) scale(1.24);z-index:5;outline:none;box-shadow:0 6px 18px rgba(0,0,0,0.6),inset -3px -4px 8px rgba(60,70,20,0.5),inset 2px 3px 6px rgba(255,255,255,0.6);}
+  .ball-marker:hover::after,.ball-marker:focus-visible::after{animation:mk-pulse 1.5s ease-out infinite;}
+  @keyframes mk-pulse{0%{transform:scale(0.72);opacity:.85;}100%{transform:scale(1.75);opacity:0;}}
+  @media (prefers-reduced-motion:reduce){.ball-marker .seam{animation:none;}}
 
-  /* Instagram post grid */
-  .ig-widget{width:100%;max-width:500px;border:1px solid rgba(242,235,221,0.14);border-radius:8px;overflow:hidden;background:#0d0d0b;}
-  .ig-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid rgba(242,235,221,0.1);}
-  .ig-ava{width:46px;height:46px;border-radius:50%;overflow:hidden;background:#161310;display:flex;align-items:center;justify-content:center;flex:0 0 auto;padding:7px;border:1px solid rgba(242,235,221,0.16);}
-  .ig-ava img{width:100%;height:100%;object-fit:contain;}
-  .ig-handle{display:flex;flex-direction:column;flex:1;min-width:0;}
-  .ig-handle b{font-size:14px;color:#f2ebdd;}
-  .ig-handle span{font-size:12px;color:#8a8478;}
-  .ig-follow{background:#a94e2b;color:#fff;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;padding:8px 15px;border-radius:6px;flex:0 0 auto;transition:background .3s ease;}
-  .ig-head:hover .ig-follow{background:#c05f38;}
-  .ig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
-  .ig-tile{position:relative;aspect-ratio:1/1;overflow:hidden;display:block;}
-  .ig-tile img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;}
-  .ig-tile:hover img{transform:scale(1.07);}
-  .ig-tile::after{content:"";position:absolute;inset:0;background:rgba(13,13,11,0);transition:background .3s ease;}
-  .ig-tile:hover::after{background:rgba(13,13,11,0.28);}
+  /* Instagram embeds row */
+  .ig-embeds{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;align-items:flex-start;margin-top:clamp(34px,4vw,52px);}
+  .ig-embeds .instagram-media{margin:0 !important;}
+
+  /* smooth section fades */
+  .sec-blend{width:100%;height:clamp(72px,9vw,132px);}
 
   /* video modal */
   #film-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(6,5,4,0.92);backdrop-filter:blur(6px);padding:clamp(16px,4vw,56px);}
@@ -192,6 +183,8 @@
     </div>
   </section>
 
+  <div class="sec-blend" style="background:linear-gradient(180deg,#0d0d0b,#f2ebdd);"></div>
+
   <!-- INTRO / KLUBI -->
   <section id="klubi" style="background:#f2ebdd;color:#211d17;">
     <div style="max-width:1000px;margin:0 auto;padding:clamp(90px,12vw,150px) clamp(24px,5vw,56px);text-align:center;">
@@ -202,18 +195,21 @@
     </div>
   </section>
 
+  <div class="sec-blend" style="background:linear-gradient(180deg,#f2ebdd,#0d0d0b);"></div>
+
   <!-- COURTS -->
   <section id="kentat" style="position:relative;background:#0d0d0b;">
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,84px);align-items:center;">
       <div class="map-figure">
         <img src="./assets/aerial.jpg" alt="Ilmakuva massakentistä" style="width:100%;height:auto;display:block;border-radius:3px;box-shadow:0 30px 80px rgba(0,0,0,0.5);">
         <span style="position:absolute;top:18px;left:18px;background:rgba(13,13,11,0.72);backdrop-filter:blur(4px);padding:7px 14px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#f2ebdd;border-radius:2px;z-index:3;" data-i18n="aerialTag">Ilmakuva · Kalastajatorppa</span>
-        <button class="map-marker" data-idx="0" style="left:53%;top:40%;">01<span class="mk-tip"></span></button>
-        <button class="map-marker" data-idx="1" style="left:16%;top:39%;">02<span class="mk-tip"></span></button>
-        <button class="map-marker" data-idx="2" style="left:29%;top:48%;">03<span class="mk-tip"></span></button>
-        <button class="map-marker" data-idx="3" style="left:20%;top:31%;">04<span class="mk-tip"></span></button>
-        <button class="map-marker" data-idx="4" style="left:8%;top:55%;">05<span class="mk-tip"></span></button>
-        <button class="map-marker" data-idx="5" style="left:60%;top:10%;">06<span class="mk-tip"></span></button>
+        <button class="ball-marker" style="left:35%;top:40%;" aria-label="Kenttä 1"><span class="seam"></span><span class="lbl">1</span></button>
+        <button class="ball-marker" style="left:61%;top:33%;" aria-label="Kenttä 2"><span class="seam"></span><span class="lbl">2</span></button>
+        <button class="ball-marker" style="left:38%;top:60%;" aria-label="Kenttä 3"><span class="seam"></span><span class="lbl">3</span></button>
+        <button class="ball-marker" style="left:61%;top:57%;" aria-label="Kenttä 4"><span class="seam"></span><span class="lbl">4</span></button>
+        <button class="ball-marker" style="left:40%;top:81%;" aria-label="Kenttä 5"><span class="seam"></span><span class="lbl">5</span></button>
+        <button class="ball-marker" style="left:62%;top:79%;" aria-label="Kenttä 6"><span class="seam"></span><span class="lbl">6</span></button>
+        <button class="ball-marker rest" style="left:16%;top:54%;" aria-label="Klubiravintola"><span class="seam"></span><span class="lbl"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2v7a2 2 0 0 0 2 2v11M9 2v9M7 2v3M19 2c-1.5 0-2.5 2-2.5 5s1 4 2.5 4v10"/></svg></span></button>
       </div>
       <div>
         <span class="eyebrow" style="color:#c77a54;" data-i18n="courtsEyebrow">Kentät</span>
@@ -238,6 +234,8 @@
     </div>
   </section>
 
+  <div class="sec-blend" style="background:linear-gradient(180deg,#0d0d0b,#f2ebdd);"></div>
+
   <!-- RESTAURANT -->
   <section id="ravintola" style="background:#f2ebdd;color:#211d17;">
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);display:grid;grid-template-columns:1.05fr 0.95fr;gap:clamp(40px,6vw,84px);align-items:center;">
@@ -250,6 +248,8 @@
       <img src="./assets/terrace.jpg" alt="Klubiravintolan terassi" style="width:100%;height:clamp(360px,42vw,560px);object-fit:cover;border-radius:3px;box-shadow:0 24px 60px rgba(33,29,23,0.22);">
     </div>
   </section>
+
+  <div class="sec-blend" style="background:linear-gradient(180deg,#f2ebdd,#161310);"></div>
 
   <!-- BOOKING / PRICING -->
   <section id="varaukset" style="background:#161310;color:#f2ebdd;border-top:1px solid rgba(242,235,221,0.08);">
@@ -290,6 +290,8 @@
     </div>
   </section>
 
+  <div class="sec-blend" style="background:linear-gradient(180deg,#0d0d0b,#f2ebdd);"></div>
+
   <!-- EVENTS -->
   <section id="tapahtumat" style="background:#f2ebdd;color:#211d17;">
     <div style="max-width:1100px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);">
@@ -304,35 +306,19 @@
     </div>
   </section>
 
-  <!-- FOLLOW / SOCIAL + FACEBOOK EMBED -->
-  <section id="seuraa" style="background:#161310;color:#f2ebdd;border-top:1px solid rgba(242,235,221,0.08);">
-    <div class="follow-grid" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,120px) clamp(24px,5vw,56px);display:grid;grid-template-columns:0.9fr 1.1fr;gap:clamp(40px,6vw,72px);align-items:center;">
-      <div>
-        <span class="eyebrow" style="color:#c77a54;" data-i18n="followEyebrow">Seuraa meitä</span>
-        <h2 class="serif" style="font-weight:500;font-size:clamp(28px,3.4vw,46px);line-height:1.12;margin:16px 0 22px;" data-i18n="followTitle">Kesän kuulumiset somessa</h2>
-        <p style="font-size:16px;line-height:1.9;color:#c7c1b5;font-weight:300;margin:0 0 30px;max-width:42ch;" data-i18n="followBody">Seuraa arkea kentiltä ja terassilta — kuvat, videot ja tapahtumat Instagramissa, YouTubessa ja Facebookissa.</p>
-        <div class="socials" id="socials-main"></div>
-      </div>
-      <div style="display:flex;justify-content:center;">
-        <!-- Instagram post grid. Placeholder tiles use club photos; replace src's with real IG post images/screenshots. -->
-        <div class="ig-widget">
-          <a class="ig-head" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener">
-            <span class="ig-ava"><img src="./assets/logo-mark.png" alt=""></span>
-            <span class="ig-handle">
-              <b>@kalastajatorpantennisklubi</b>
-              <span data-i18n="igSub">Seuraa Instagramissa</span>
-            </span>
-            <span class="ig-follow" data-i18n="igFollow">Seuraa</span>
-          </a>
-          <div class="ig-grid">
-            <a class="ig-tile" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener"><img src="./assets/courts-spring.jpg" alt=""></a>
-            <a class="ig-tile" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener"><img src="./assets/terrace.jpg" alt=""></a>
-            <a class="ig-tile" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener"><img src="./assets/panorama.jpg" alt=""></a>
-            <a class="ig-tile" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener"><img src="./assets/courts-summer.jpg" alt=""></a>
-            <a class="ig-tile" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener"><img src="./assets/terrace.jpg" alt=""></a>
-            <a class="ig-tile" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener"><img src="./assets/courts-spring.jpg" alt=""></a>
-          </div>
-        </div>
+  <div class="sec-blend" style="background:linear-gradient(180deg,#f2ebdd,#161310);"></div>
+
+  <!-- FOLLOW / SOCIAL + INSTAGRAM EMBEDS -->
+  <section id="seuraa" style="background:#161310;color:#f2ebdd;">
+    <div style="max-width:1120px;margin:0 auto;padding:clamp(80px,10vw,120px) clamp(24px,5vw,56px);text-align:center;">
+      <span class="eyebrow" style="color:#c77a54;" data-i18n="followEyebrow">Seuraa meitä</span>
+      <h2 class="serif" style="font-weight:500;font-size:clamp(28px,3.4vw,46px);line-height:1.12;margin:16px auto 22px;" data-i18n="followTitle">Kesän kuulumiset somessa</h2>
+      <p style="font-size:16px;line-height:1.9;color:#c7c1b5;font-weight:300;margin:0 auto 28px;max-width:52ch;" data-i18n="followBody">Seuraa arkea kentiltä ja terassilta — kuvat, videot ja tapahtumat Instagramissa, YouTubessa ja Facebookissa.</p>
+      <div class="socials center" id="socials-main"></div>
+      <!-- Live Instagram embeds (rendered by embed.js). Swap the permalinks to feature other posts. -->
+      <div class="ig-embeds">
+        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOIt2pjjMw-/" data-instgrm-version="14" style="max-width:340px;min-width:300px;width:100%;margin:0;background:#FFF;border-radius:3px;"></blockquote>
+        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DYl4Pm1gkuZ/" data-instgrm-version="14" style="max-width:340px;min-width:300px;width:100%;margin:0;background:#FFF;border-radius:3px;"></blockquote>
       </div>
     </div>
   </section>
@@ -408,5 +394,6 @@
   </div>
 
   <script src="./app.js"></script>
+  <script async src="https://www.instagram.com/embed.js"></script>
 </body>
 </html>

@@ -147,9 +147,9 @@
   }
 
   function renderLists(t) {
-    $("#facilities").innerHTML = t.facilities.map(function (f, i) {
-      return '<div class="facility" data-idx="' + i + '" style="display:flex;align-items:baseline;gap:14px;padding:14px 6px;border-bottom:1px solid rgba(242,235,221,0.14);">' +
-        '<span class="serif" style="font-size:17px;color:#c77a54;min-width:20px;">' + esc(f.num) + '</span>' +
+    $("#facilities").innerHTML = t.facilities.map(function (f) {
+      return '<div style="display:flex;align-items:baseline;gap:13px;padding:14px 4px;border-bottom:1px solid rgba(242,235,221,0.14);">' +
+        '<span style="color:#c77a54;font-size:15px;line-height:1;">—</span>' +
         '<span style="font-size:13.5px;letter-spacing:.03em;color:#d8d3c8;">' + esc(f.name) + '</span></div>';
     }).join("");
 
@@ -204,34 +204,8 @@
     var t = DICT[lang];
     applyText(t);
     renderLists(t);
-    wireMap(t);
     $("#lang-toggle").textContent = lang === "fi" ? "EN" : "FI";
     resetRating();
-  }
-
-  /* ---------- Aerial map markers <-> facilities list ---------- */
-  function wireMap(t) {
-    var markers = $all(".map-marker");
-    var facilities = $all("#facilities .facility");
-    if (!markers.length) return;
-    function markerFor(idx) {
-      for (var i = 0; i < markers.length; i++) if (+markers[i].getAttribute("data-idx") === idx) return markers[i];
-      return null;
-    }
-    markers.forEach(function (m) {
-      var idx = +m.getAttribute("data-idx");
-      var tip = m.querySelector(".mk-tip");
-      if (tip && t.facilities[idx]) tip.textContent = t.facilities[idx].name;
-      var fac = facilities[idx];
-      var on = function () { m.classList.add("active"); if (fac) fac.classList.add("hl"); };
-      var off = function () { m.classList.remove("active"); if (fac) fac.classList.remove("hl"); };
-      m.onmouseenter = on; m.onmouseleave = off; m.onfocus = on; m.onblur = off;
-    });
-    facilities.forEach(function (fac, idx) {
-      var m = markerFor(idx);
-      fac.onmouseenter = function () { if (m) m.classList.add("active"); fac.classList.add("hl"); };
-      fac.onmouseleave = function () { if (m) m.classList.remove("active"); fac.classList.remove("hl"); };
-    });
   }
 
   /* ---------- Animated rating counter (counts up when in view) ---------- */
