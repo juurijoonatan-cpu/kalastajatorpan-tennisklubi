@@ -61,6 +61,7 @@
     ],
     followEyebrow: "Seuraa meitä", followTitle: "Kesän kuulumiset somessa",
     followBody: "Seuraa arkea kentiltä ja terassilta — kuvat, videot ja tapahtumat Instagramissa, YouTubessa ja Facebookissa.",
+    igSub: "Seuraa Instagramissa", igFollow: "Seuraa",
     locEyebrow: "Yhteystiedot", locTitle: "Löydä perille",
     locAddress: "Osoite", locBooking: "Tuntivaraukset", locHours: "Aukioloajat", locSocial: "Somessa",
     footBlurb: "Perinteikäs ulkotenniskeskus Munkkiniemessä, meren äärellä. Massatennistä on pelattu Torpalla vuodesta 1938. Klubilla toimii LTC-33 r.f., yksi Suomen vanhimmista tennisseuroista.",
@@ -116,6 +117,7 @@
     ],
     followEyebrow: "Follow us", followTitle: "Summer moments on social",
     followBody: "Follow life on the courts and the terrace — photos, videos and events on Instagram, YouTube and Facebook.",
+    igSub: "Follow on Instagram", igFollow: "Follow",
     locEyebrow: "Contact", locTitle: "Find your way here",
     locAddress: "Address", locBooking: "Court bookings", locHours: "Opening hours", locSocial: "On social",
     footBlurb: "A storied outdoor tennis centre in Munkkiniemi, by the sea. Clay tennis has been played here since 1938. The club is home to LTC-33 r.f., one of Finland’s oldest tennis clubs.",
@@ -145,8 +147,8 @@
   }
 
   function renderLists(t) {
-    $("#facilities").innerHTML = t.facilities.map(function (f) {
-      return '<div style="display:flex;align-items:baseline;gap:14px;padding:14px 0;border-bottom:1px solid rgba(242,235,221,0.14);">' +
+    $("#facilities").innerHTML = t.facilities.map(function (f, i) {
+      return '<div class="facility" data-idx="' + i + '" style="display:flex;align-items:baseline;gap:14px;padding:14px 6px;border-bottom:1px solid rgba(242,235,221,0.14);">' +
         '<span class="serif" style="font-size:17px;color:#c77a54;min-width:20px;">' + esc(f.num) + '</span>' +
         '<span style="font-size:13.5px;letter-spacing:.03em;color:#d8d3c8;">' + esc(f.name) + '</span></div>';
     }).join("");
@@ -202,8 +204,34 @@
     var t = DICT[lang];
     applyText(t);
     renderLists(t);
+    wireMap(t);
     $("#lang-toggle").textContent = lang === "fi" ? "EN" : "FI";
     resetRating();
+  }
+
+  /* ---------- Aerial map markers <-> facilities list ---------- */
+  function wireMap(t) {
+    var markers = $all(".map-marker");
+    var facilities = $all("#facilities .facility");
+    if (!markers.length) return;
+    function markerFor(idx) {
+      for (var i = 0; i < markers.length; i++) if (+markers[i].getAttribute("data-idx") === idx) return markers[i];
+      return null;
+    }
+    markers.forEach(function (m) {
+      var idx = +m.getAttribute("data-idx");
+      var tip = m.querySelector(".mk-tip");
+      if (tip && t.facilities[idx]) tip.textContent = t.facilities[idx].name;
+      var fac = facilities[idx];
+      var on = function () { m.classList.add("active"); if (fac) fac.classList.add("hl"); };
+      var off = function () { m.classList.remove("active"); if (fac) fac.classList.remove("hl"); };
+      m.onmouseenter = on; m.onmouseleave = off; m.onfocus = on; m.onblur = off;
+    });
+    facilities.forEach(function (fac, idx) {
+      var m = markerFor(idx);
+      fac.onmouseenter = function () { if (m) m.classList.add("active"); fac.classList.add("hl"); };
+      fac.onmouseleave = function () { if (m) m.classList.remove("active"); fac.classList.remove("hl"); };
+    });
   }
 
   /* ---------- Animated rating counter (counts up when in view) ---------- */

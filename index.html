@@ -89,9 +89,34 @@
   .review-name{font-size:13px;color:#f2ebdd;margin-top:auto;}
   .review-name span{color:#8a8478;}
 
-  /* follow / facebook embed */
-  .fb-embed{width:100%;max-width:500px;border-radius:4px;overflow:hidden;background:#fff;min-height:640px;}
-  .fb-embed iframe{width:100%;border:0;display:block;}
+  /* interactive aerial map markers */
+  .map-figure{position:relative;}
+  .map-marker{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:rgba(169,78,43,0.94);color:#fff;border:2px solid rgba(242,235,221,0.92);font-family:'Playfair Display',serif;font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.45);transition:transform .25s ease,background .25s ease;z-index:2;padding:0;}
+  .map-marker:hover,.map-marker.active{background:#c8683c;transform:translate(-50%,-50%) scale(1.18);z-index:4;}
+  .map-marker::before{content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid rgba(200,104,60,0.75);opacity:0;}
+  .map-marker:hover::before,.map-marker.active::before{animation:mk-pulse 1.6s ease-out infinite;}
+  @keyframes mk-pulse{0%{transform:scale(0.7);opacity:.8;}100%{transform:scale(1.7);opacity:0;}}
+  .mk-tip{position:absolute;bottom:calc(100% + 9px);left:50%;transform:translateX(-50%);white-space:nowrap;background:#0d0d0b;color:#f2ebdd;font-family:'Archivo',sans-serif;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:3px;opacity:0;pointer-events:none;transition:opacity .2s ease;box-shadow:0 6px 18px rgba(0,0,0,0.4);}
+  .map-marker:hover .mk-tip,.map-marker.active .mk-tip{opacity:1;}
+  .facility{transition:background .25s ease;border-radius:4px;}
+  .facility.hl{background:rgba(199,122,84,0.16);}
+
+  /* Instagram post grid */
+  .ig-widget{width:100%;max-width:500px;border:1px solid rgba(242,235,221,0.14);border-radius:8px;overflow:hidden;background:#0d0d0b;}
+  .ig-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid rgba(242,235,221,0.1);}
+  .ig-ava{width:46px;height:46px;border-radius:50%;overflow:hidden;background:#161310;display:flex;align-items:center;justify-content:center;flex:0 0 auto;padding:7px;border:1px solid rgba(242,235,221,0.16);}
+  .ig-ava img{width:100%;height:100%;object-fit:contain;}
+  .ig-handle{display:flex;flex-direction:column;flex:1;min-width:0;}
+  .ig-handle b{font-size:14px;color:#f2ebdd;}
+  .ig-handle span{font-size:12px;color:#8a8478;}
+  .ig-follow{background:#a94e2b;color:#fff;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;padding:8px 15px;border-radius:6px;flex:0 0 auto;transition:background .3s ease;}
+  .ig-head:hover .ig-follow{background:#c05f38;}
+  .ig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+  .ig-tile{position:relative;aspect-ratio:1/1;overflow:hidden;display:block;}
+  .ig-tile img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;}
+  .ig-tile:hover img{transform:scale(1.07);}
+  .ig-tile::after{content:"";position:absolute;inset:0;background:rgba(13,13,11,0);transition:background .3s ease;}
+  .ig-tile:hover::after{background:rgba(13,13,11,0.28);}
 
   /* video modal */
   #film-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(6,5,4,0.92);backdrop-filter:blur(6px);padding:clamp(16px,4vw,56px);}
@@ -180,9 +205,15 @@
   <!-- COURTS -->
   <section id="kentat" style="position:relative;background:#0d0d0b;">
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,84px);align-items:center;">
-      <div style="position:relative;">
+      <div class="map-figure">
         <img src="./assets/aerial.jpg" alt="Ilmakuva massakentistä" style="width:100%;height:auto;display:block;border-radius:3px;box-shadow:0 30px 80px rgba(0,0,0,0.5);">
-        <span style="position:absolute;top:18px;left:18px;background:rgba(13,13,11,0.72);backdrop-filter:blur(4px);padding:7px 14px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#f2ebdd;border-radius:2px;" data-i18n="aerialTag">Ilmakuva · Kalastajatorppa</span>
+        <span style="position:absolute;top:18px;left:18px;background:rgba(13,13,11,0.72);backdrop-filter:blur(4px);padding:7px 14px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#f2ebdd;border-radius:2px;z-index:3;" data-i18n="aerialTag">Ilmakuva · Kalastajatorppa</span>
+        <button class="map-marker" data-idx="0" style="left:53%;top:40%;">01<span class="mk-tip"></span></button>
+        <button class="map-marker" data-idx="1" style="left:16%;top:39%;">02<span class="mk-tip"></span></button>
+        <button class="map-marker" data-idx="2" style="left:29%;top:48%;">03<span class="mk-tip"></span></button>
+        <button class="map-marker" data-idx="3" style="left:20%;top:31%;">04<span class="mk-tip"></span></button>
+        <button class="map-marker" data-idx="4" style="left:8%;top:55%;">05<span class="mk-tip"></span></button>
+        <button class="map-marker" data-idx="5" style="left:60%;top:10%;">06<span class="mk-tip"></span></button>
       </div>
       <div>
         <span class="eyebrow" style="color:#c77a54;" data-i18n="courtsEyebrow">Kentät</span>
@@ -283,8 +314,24 @@
         <div class="socials" id="socials-main"></div>
       </div>
       <div style="display:flex;justify-content:center;">
-        <div class="fb-embed">
-          <iframe title="Facebook" src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Ftennisklubi%2F&tabs=timeline&width=500&height=640&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true" width="500" height="640" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" loading="lazy"></iframe>
+        <!-- Instagram post grid. Placeholder tiles use club photos; replace src's with real IG post images/screenshots. -->
+        <div class="ig-widget">
+          <a class="ig-head" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener">
+            <span class="ig-ava"><img src="./assets/logo-mark.png" alt=""></span>
+            <span class="ig-handle">
+              <b>@kalastajatorpantennisklubi</b>
+              <span data-i18n="igSub">Seuraa Instagramissa</span>
+            </span>
+            <span class="ig-follow" data-i18n="igFollow">Seuraa</span>
+          </a>
+          <div class="ig-grid">
+            <a class="ig-tile" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener"><img src="./assets/courts-spring.jpg" alt=""></a>
+            <a class="ig-tile" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener"><img src="./assets/terrace.jpg" alt=""></a>
+            <a class="ig-tile" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener"><img src="./assets/panorama.jpg" alt=""></a>
+            <a class="ig-tile" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener"><img src="./assets/courts-summer.jpg" alt=""></a>
+            <a class="ig-tile" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener"><img src="./assets/terrace.jpg" alt=""></a>
+            <a class="ig-tile" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener"><img src="./assets/courts-spring.jpg" alt=""></a>
+          </div>
         </div>
       </div>
     </div>
