@@ -2,15 +2,6 @@
 (function () {
   "use strict";
 
-  /* ---------- Content (single source of truth, FI + EN) ---------- */
-  var PHOTOS = [
-    { src: "./assets/panorama.jpg", w: 560 },
-    { src: "./assets/courts-spring.jpg", w: 460 },
-    { src: "./assets/terrace.jpg", w: 440 },
-    { src: "./assets/aerial.jpg", w: 440 },
-    { src: "./assets/courts-summer.jpg", w: 330 }
-  ];
-
   var SOCIALS = [
     { key: "instagram", label: "Instagram", href: "https://www.instagram.com/kalastajatorpantennisklubi/" },
     { key: "youtube", label: "YouTube", href: "https://www.youtube.com/@tennisklubi" },
@@ -29,7 +20,7 @@
     heroTitle: "Massatennistä meren äärellä<br>vuodesta 1938",
     heroSub: "Perinteikäs ulkotenniskeskus Munkkiniemen puistossa, meren rannassa.",
     heroTag: "Munkkiniemi, Helsinki · Est. 1938",
-    filmTitle: "Katso esittelyvideo", filmSub: "Koko video · äänellä",
+    filmTitle: "Katso intro",
     introEyebrow: "Klubi vuodesta 1938",
     introTitle: "Munkkiniemen sydämessä, meren äärellä",
     introBody: "Kalastajatorpan Tennisklubi on perinteikäs ulkotenniskeskus, jossa on pelattu massatennistä vuodesta 1938. Suomen oloissa ainutlaatuinen kesäinen tenniskeidas sijaitsee kauniissa puistoympäristössä meren äärellä. Klubiravintola terasseineen toivottaa tervetulleeksi nauttimaan talon antimista myös ilman tennismailaa.",
@@ -41,8 +32,6 @@
       { num: "03", name: "Klubiravintola & terassi" }, { num: "04", name: "Grand Slam Lounge" },
       { num: "05", name: "Pysäköinti" }, { num: "06", name: "Puisto & ranta" }
     ],
-    interludeTitle: "Peli on meillä intohimo",
-    interludeBody: "Massan tuoksu, pallon kimmoke ja meren tuuli — Torpalla tennis on enemmän kuin laji. Se on kesän tapa elää.",
     restEyebrow: "Klubiravintola", restTitle: "Ruokaa ja juomaa terassilla, ympäri kesän",
     restBody: "Runsas ja raikas aamiaisbuffet arkisin, seisova salaattibuffet joka päivä kesäkuusta syyskuuhun, sekä club menu -herkut: suolaiset piiraat, Torpan Toast Skagen, korvapuustit ja New York cheesecake.",
     restHours: [{ k: "Aamiainen", v: "07:30–10:30" }, { k: "Salaattibuffet", v: "12:00–20:00" }, { k: "Club menu", v: "09:00–22:30" }],
@@ -55,10 +44,12 @@
       { k: "Arki 15:30–22:00", v: "39€" }, { k: "Viikonloppu", v: "36€" }
     ],
     revEyebrow: "Arvostelut", revTitle: "Mitä jäsenet sanovat",
+    ratingScore: 4.9, revCount: "128 Google-arvostelua",
     reviews: [
-      { stars: 5, body: "Suomen kaunein paikka pelata tennistä. Massakentät ovat huippukunnossa ja terassilta avautuu upea merinäköala.", name: "Anni Virtanen", role: "Jäsen vuodesta 2015" },
-      { stars: 5, body: "Klubin tunnelma on ainutlaatuinen. Aamupeli ja sen jälkeen aamiainen terassilla — parempaa kesäaamua ei ole.", name: "Mikko Laine", role: "Kausikorttilainen" },
-      { stars: 5, body: "Varaaminen Playtomicissa on vaivatonta ja henkilökunta palvelee lämpimästi. Torppa on kesämme kohokohta.", name: "Sofia Nieminen", role: "Vieraileva pelaaja" }
+      { stars: 5, body: "Suomen kaunein paikka pelata tennistä. Massakentät huippukunnossa ja upea merinäköala.", name: "Anni Virtanen" },
+      { stars: 5, body: "Aamupeli ja sen jälkeen aamiainen terassilla — täydellinen kesäaamu.", name: "Mikko Laine" },
+      { stars: 5, body: "Varaaminen on helppoa ja henkilökunta palvelee lämpimästi. Suosittelen!", name: "Sofia Nieminen" },
+      { stars: 5, body: "Upea miljöö meren äärellä ja kentät aina siistit. Kesän ehdoton kohokohta.", name: "Petri Koskinen" }
     ],
     evEyebrow: "Tapahtumat & turnaukset", evTitle: "Kesän kohokohdat Torpalla", evLink: "ITF Midnight Sun Open →",
     events: [
@@ -84,7 +75,7 @@
     heroTitle: "Clay tennis by the sea<br>since 1938",
     heroSub: "A storied outdoor tennis centre in the Munkkiniemi park, right by the shore.",
     heroTag: "Munkkiniemi, Helsinki · Est. 1938",
-    filmTitle: "Watch the film", filmSub: "Full video · with sound",
+    filmTitle: "Play intro",
     introEyebrow: "A club since 1938",
     introTitle: "In the heart of Munkkiniemi, by the sea",
     introBody: "Kalastajatorpan Tennisklubi is a storied outdoor tennis centre where clay tennis has been played since 1938. A uniquely Finnish summer retreat, set in a beautiful park by the sea. Our clubhouse restaurant and terraces welcome guests to enjoy the setting even without a racquet.",
@@ -96,8 +87,6 @@
       { num: "03", name: "Restaurant & terrace" }, { num: "04", name: "Grand Slam Lounge" },
       { num: "05", name: "Parking" }, { num: "06", name: "Park & shore" }
     ],
-    interludeTitle: "The game is our passion",
-    interludeBody: "The scent of clay, the bounce of the ball and the sea breeze — at Torppa, tennis is more than a sport. It is the way we live the summer.",
     restEyebrow: "Clubhouse restaurant", restTitle: "Food and drink on the terrace, all summer",
     restBody: "A generous fresh breakfast buffet on weekdays, a standing salad buffet every day from June through September, plus club-menu favourites: savoury pies, Torpan Toast Skagen, cinnamon buns and New York cheesecake.",
     restHours: [{ k: "Breakfast", v: "07:30–10:30" }, { k: "Salad buffet", v: "12:00–20:00" }, { k: "Club menu", v: "09:00–22:30" }],
@@ -110,10 +99,12 @@
       { k: "Weekday 15:30–22:00", v: "€39" }, { k: "Weekend", v: "€36" }
     ],
     revEyebrow: "Reviews", revTitle: "What our members say",
+    ratingScore: 4.9, revCount: "128 Google reviews",
     reviews: [
-      { stars: 5, body: "The most beautiful place to play tennis in Finland. The clay courts are in top condition and the terrace has a stunning sea view.", name: "Anni Virtanen", role: "Member since 2015" },
-      { stars: 5, body: "The atmosphere here is one of a kind. A morning match followed by breakfast on the terrace — there is no better summer morning.", name: "Mikko Laine", role: "Season pass holder" },
-      { stars: 5, body: "Booking on Playtomic is effortless and the staff are wonderfully welcoming. Torppa is the highlight of our summer.", name: "Sofia Nieminen", role: "Visiting player" }
+      { stars: 5, body: "The most beautiful place to play tennis in Finland. Clay courts in top condition and a stunning sea view.", name: "Anni Virtanen" },
+      { stars: 5, body: "A morning match followed by breakfast on the terrace — the perfect summer morning.", name: "Mikko Laine" },
+      { stars: 5, body: "Booking is effortless and the staff are wonderfully welcoming. Highly recommend!", name: "Sofia Nieminen" },
+      { stars: 5, body: "A gorgeous setting by the sea and the courts are always immaculate. The highlight of our summer.", name: "Petri Koskinen" }
     ],
     evEyebrow: "Events & tournaments", evTitle: "Summer highlights at Torppa", evLink: "ITF Midnight Sun Open →",
     events: [
@@ -143,7 +134,6 @@
 
   /* ---------- Render ---------- */
   function applyText(t) {
-    // keys that legitimately contain markup (a line break)
     var htmlKeys = { heroTitle: true };
     $all("[data-i18n]").forEach(function (el) {
       var key = el.getAttribute("data-i18n");
@@ -155,65 +145,56 @@
   }
 
   function renderLists(t) {
-    // facilities
     $("#facilities").innerHTML = t.facilities.map(function (f) {
       return '<div style="display:flex;align-items:baseline;gap:14px;padding:14px 0;border-bottom:1px solid rgba(242,235,221,0.14);">' +
         '<span class="serif" style="font-size:17px;color:#c77a54;min-width:20px;">' + esc(f.num) + '</span>' +
         '<span style="font-size:13.5px;letter-spacing:.03em;color:#d8d3c8;">' + esc(f.name) + '</span></div>';
     }).join("");
 
-    // restaurant hours (dark text on light bg)
     $("#restHours").innerHTML = t.restHours.map(function (h) {
       return '<div style="display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;border-bottom:1px solid rgba(33,29,23,0.14);">' +
         '<span style="font-size:14.5px;letter-spacing:.02em;color:#3a352c;">' + esc(h.k) + '</span>' +
         '<span class="serif" style="font-size:20px;color:#211d17;">' + esc(h.v) + '</span></div>';
     }).join("");
 
-    // prices
     $("#prices").innerHTML = t.prices.map(function (p) {
       return '<div style="display:flex;justify-content:space-between;align-items:baseline;padding:17px 0;border-bottom:1px solid rgba(242,235,221,0.1);">' +
         '<span style="font-size:14.5px;color:#d8d3c8;">' + esc(p.k) + '</span>' +
         '<span class="serif" style="font-size:23px;">' + esc(p.v) + '</span></div>';
     }).join("");
 
-    // events (dark text on light bg)
     $("#events").innerHTML = t.events.map(function (e) {
       return '<div style="display:grid;grid-template-columns:180px 1fr;gap:clamp(16px,3vw,44px);padding:24px 0;border-bottom:1px solid rgba(33,29,23,0.14);">' +
         '<span class="serif" style="font-size:19px;color:#a94e2b;">' + esc(e.when) + '</span>' +
         '<span style="font-size:16px;color:#3a352c;font-weight:300;">' + esc(e.what) + '</span></div>';
     }).join("");
 
-    // footer hours
     $("#footHrs").innerHTML = t.footHrs.map(function (h) {
       return '<div style="display:flex;justify-content:space-between;max-width:240px;">' +
         '<span style="font-size:14px;color:#c7c1b5;">' + esc(h.k) + '</span>' +
         '<span style="font-size:14px;color:#c7c1b5;">' + esc(h.v) + '</span></div>';
     }).join("");
 
-    // reviews
+    // compact Google-style review cards
     $("#reviews").innerHTML = t.reviews.map(function (r) {
       var stars = "";
       for (var i = 0; i < 5; i++) stars += i < r.stars ? "★" : "☆";
-      var initial = r.name.charAt(0);
       return '<div class="review-card">' +
         '<div class="review-stars">' + stars + '</div>' +
-        '<p class="review-body">“' + esc(r.body) + '”</p>' +
-        '<div class="review-who"><div class="review-avatar">' + esc(initial) + '</div>' +
-        '<div><div class="review-name">' + esc(r.name) + '</div>' +
-        '<div class="review-role">' + esc(r.role) + '</div></div></div></div>';
+        '<p class="review-body">' + esc(r.body) + '</p>' +
+        '<div class="review-name">' + esc(r.name) + ' <span>· Google</span></div></div>';
     }).join("");
+
+    // rating summary count
+    var rc = $("#rating-count"); if (rc) rc.textContent = t.revCount;
   }
 
   function renderSocials() {
-    var groups = [
-      { el: $("#socials-main"), dark: false },
-      { el: $("#socials-contact"), dark: false },
-      { el: $("#socials-footer"), dark: false }
-    ];
+    var groups = [$("#socials-main"), $("#socials-contact"), $("#socials-footer")];
     var html = SOCIALS.map(function (s) {
       return '<a class="social-ico" href="' + s.href + '" target="_blank" rel="noopener" aria-label="' + s.label + '" title="' + s.label + '">' + ICONS[s.key] + '</a>';
     }).join("");
-    groups.forEach(function (g) { if (g.el) g.el.innerHTML = html; });
+    groups.forEach(function (el) { if (el) el.innerHTML = html; });
   }
 
   function setLang(next) {
@@ -222,6 +203,43 @@
     applyText(t);
     renderLists(t);
     $("#lang-toggle").textContent = lang === "fi" ? "EN" : "FI";
+    resetRating();
+  }
+
+  /* ---------- Animated rating counter (counts up when in view) ---------- */
+  var ratingDone = false, ratingObserver = null;
+  function fmtScore(n) {
+    var s = n.toFixed(1);
+    return lang === "fi" ? s.replace(".", ",") : s;
+  }
+  function resetRating() {
+    var el = $("#rating-score");
+    if (!el) return;
+    if (ratingDone) { el.textContent = fmtScore(DICT[lang].ratingScore); }
+    else { el.textContent = fmtScore(0); }
+  }
+  function animateRating() {
+    var el = $("#rating-score");
+    if (!el) return;
+    var target = DICT[lang].ratingScore;
+    var steps = 34, i = 0;
+    (function tick() {
+      i++;
+      var p = i / steps;
+      var eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+      el.textContent = fmtScore(target * eased);
+      if (i < steps) requestAnimationFrame(tick);
+      else { el.textContent = fmtScore(target); ratingDone = true; }
+    })();
+  }
+  function initRatingCounter() {
+    var el = $("#rating-score");
+    if (!el) return;
+    if (!("IntersectionObserver" in window)) { animateRating(); return; }
+    ratingObserver = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting && !ratingDone) { animateRating(); }
+    }, { threshold: 0.5 });
+    ratingObserver.observe(el);
   }
 
   /* ---------- Interactions ---------- */
@@ -264,136 +282,12 @@
   function initHeroVideo() {
     var vid = $("#hero-video");
     if (!vid) return;
-    vid.muted = true; // required for autoplay
+    vid.muted = true;
     var tryPlay = function () { var p = vid.play(); if (p && p.catch) p.catch(function () {}); };
     vid.addEventListener("canplay", tryPlay, { once: true });
     tryPlay();
-    // resume if autoplay was blocked until first interaction
     var kick = function () { if (vid.paused) tryPlay(); };
     window.addEventListener("pointerdown", kick, { passive: true, once: true });
-  }
-
-  /* ---------- 3D tennis ball ---------- */
-  function feltTexture() {
-    var c = document.createElement("canvas");
-    c.width = 1024; c.height = 512;
-    var g = c.getContext("2d");
-    // base optic-yellow felt
-    var grad = g.createLinearGradient(0, 0, 0, 512);
-    grad.addColorStop(0, "#d7e24a");
-    grad.addColorStop(0.5, "#c6d63f");
-    grad.addColorStop(1, "#b7c733");
-    g.fillStyle = grad; g.fillRect(0, 0, 1024, 512);
-    // felt speckle
-    for (var i = 0; i < 9000; i++) {
-      var x = Math.floor(seededRand() * 1024);
-      var y = Math.floor(seededRand() * 512);
-      var v = seededRand();
-      g.fillStyle = v > 0.5 ? "rgba(255,255,255,0.05)" : "rgba(60,70,20,0.06)";
-      g.fillRect(x, y, 1, 1);
-    }
-    // two interlocking seams (sine waves) — the classic tennis-ball look
-    drawSeam(g, 0);
-    drawSeam(g, Math.PI);
-    return c;
-  }
-
-  function drawSeam(g, phase) {
-    var W = 1024, H = 512, amp = H * 0.2, mid = H / 2;
-    // outer soft white band
-    g.lineWidth = 26; g.strokeStyle = "rgba(245,245,238,0.95)"; g.lineJoin = "round";
-    seamPath(g, W, H, amp, mid, phase); g.stroke();
-    // inner subtle groove
-    g.lineWidth = 4; g.strokeStyle = "rgba(150,150,120,0.55)";
-    seamPath(g, W, H, amp, mid, phase); g.stroke();
-  }
-
-  function seamPath(g, W, H, amp, mid, phase) {
-    g.beginPath();
-    for (var x = 0; x <= W; x += 4) {
-      var y = mid + amp * Math.sin((x / W) * Math.PI * 2 * 2 + phase);
-      if (x === 0) g.moveTo(x, y); else g.lineTo(x, y);
-    }
-  }
-
-  // tiny deterministic RNG (Date.now/Math.random-free-friendly seed)
-  var _seed = 1337;
-  function seededRand() { _seed = (_seed * 16807) % 2147483647; return (_seed - 1) / 2147483646; }
-
-  function init3DBall() {
-    var mount = document.getElementById("ball3d");
-    if (!mount || typeof THREE === "undefined") { if (mount) mount.style.display = "none"; return; }
-    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    var size = mount.clientWidth || 320;
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
-    camera.position.set(0, 0, 4.2);
-
-    var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setSize(size, size);
-    mount.appendChild(renderer.domElement);
-
-    var tex = new THREE.CanvasTexture(feltTexture());
-    if (THREE.sRGBEncoding) tex.encoding = THREE.sRGBEncoding;
-    tex.anisotropy = 4;
-
-    var mat = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.92, metalness: 0.0 });
-    var ball = new THREE.Mesh(new THREE.SphereGeometry(1.15, 96, 96), mat);
-    ball.rotation.z = 0.35;
-    scene.add(ball);
-
-    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
-    var key = new THREE.DirectionalLight(0xffffff, 1.15); key.position.set(3, 4, 5); scene.add(key);
-    var rim = new THREE.DirectionalLight(0xffe4b8, 0.5); rim.position.set(-4, -2, -3); scene.add(rim);
-
-    var targetX = 0, targetY = 0, curX = 0, curY = 0, dragging = false, lastX = 0, lastY = 0, spin = 0;
-
-    function onResize() {
-      var s = mount.clientWidth || size;
-      renderer.setSize(s, s);
-    }
-    window.addEventListener("resize", onResize, { passive: true });
-
-    mount.addEventListener("pointermove", function (e) {
-      var r = mount.getBoundingClientRect();
-      var nx = (e.clientX - r.left) / r.width - 0.5;
-      var ny = (e.clientY - r.top) / r.height - 0.5;
-      targetY = nx * 0.9; targetX = ny * 0.7;
-      if (dragging) { spin += (e.clientX - lastX) * 0.01; lastX = e.clientX; lastY = e.clientY; }
-    });
-    mount.addEventListener("pointerdown", function (e) { dragging = true; lastX = e.clientX; lastY = e.clientY; });
-    window.addEventListener("pointerup", function () { dragging = false; });
-    mount.addEventListener("pointerleave", function () { targetX = 0; targetY = 0; });
-
-    // Only animate while the ball is on screen (perf + battery friendly)
-    var visible = false, rafId = null;
-    if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (entries) {
-        visible = entries[0].isIntersecting;
-        if (visible && rafId === null) animate();
-        else if (!visible && rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
-      }, { threshold: 0.01 }).observe(mount);
-    } else { visible = true; animate(); }
-
-    var t0 = 0;
-    function animate() {
-      if (!visible) { rafId = null; return; }
-      rafId = requestAnimationFrame(animate);
-      t0 += 1;
-      curX += (targetX - curX) * 0.06;
-      curY += (targetY - curY) * 0.06;
-      if (!reduce) ball.rotation.y += 0.006 + spin * 0.02;
-      spin *= 0.9;
-      ball.rotation.x = curX * 0.6 + Math.sin(t0 * 0.01) * 0.04;
-      ball.position.y = Math.sin(t0 * 0.02) * 0.05;
-      camera.position.x = curY * 0.6;
-      camera.position.y = -curX * 0.4;
-      camera.lookAt(0, 0, 0);
-      renderer.render(scene, camera);
-    }
-    animate();
   }
 
   /* ---------- Boot ---------- */
@@ -404,7 +298,7 @@
     initCookie();
     initFilmModal();
     initHeroVideo();
-    init3DBall();
+    initRatingCounter();
     $("#lang-toggle").addEventListener("click", function () { setLang(lang === "fi" ? "en" : "fi"); });
   }
 
