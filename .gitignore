@@ -9,3 +9,6 @@ image-slot.js
 
 # Design scratch / source uploads (heavy, not part of the site)
 uploads/
+
+# Claude Code local settings
+.claude/
