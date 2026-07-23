@@ -31,6 +31,8 @@
   #nav.scrolled{height:64px;background:rgba(16,30,22,0.94);border-bottom:1px solid rgba(242,235,221,0.12);}
   #nav a,#nav button{color:#f2ebdd;opacity:.82;transition:opacity .25s ease;}
   #nav a:hover,#nav button:hover{opacity:1;}
+  .nav-brand{display:flex;align-items:center;justify-self:start;}
+  .nav-center{display:flex;align-items:center;justify-content:center;}
   .nav-links{display:flex;gap:clamp(16px,2vw,32px);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;}
   .nav-right{display:flex;gap:clamp(14px,1.6vw,26px);align-items:center;justify-content:flex-end;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;}
   .nav-right button{background:none;border:none;font-family:'Archivo',sans-serif;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;padding:0;}
@@ -108,11 +110,15 @@
   .ball-marker .mk-tip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#16281e;}
   .ball-marker:hover .mk-tip,.ball-marker.open .mk-tip,.ball-marker:focus-visible .mk-tip{opacity:1;transform:translateX(-50%) translateY(0);}
 
-  /* Instagram embeds — framed as designed cards */
-  .ig-embeds{display:flex;flex-wrap:wrap;gap:clamp(16px,2vw,26px);justify-content:center;align-items:stretch;margin-top:clamp(34px,4vw,52px);}
-  .ig-card{border-radius:16px;overflow:hidden;box-shadow:0 26px 64px rgba(0,0,0,0.5);border:1px solid rgba(242,235,221,0.14);background:#fff;transition:transform .4s ease,box-shadow .4s ease;line-height:0;}
-  .ig-card:hover{transform:translateY(-6px);box-shadow:0 34px 82px rgba(0,0,0,0.62);}
+  /* Instagram embeds — auto-scrolling marquee strip, like the photo strip */
+  .ig-marquee{overflow:hidden;margin-top:clamp(34px,4vw,52px);}
+  .ig-track{display:flex;align-items:flex-start;width:max-content;animation:ig-marquee 70s linear infinite;}
+  .ig-track:hover{animation-play-state:paused;}
+  /* content is 4 identical pairs + per-card right margin → one pair = exactly 25% */
+  @keyframes ig-marquee{to{transform:translateX(-25%);}}
+  .ig-card{width:min(340px,78vw);flex:0 0 auto;margin-right:clamp(16px,2vw,26px);border-radius:16px;overflow:hidden;box-shadow:0 26px 64px rgba(0,0,0,0.5);border:1px solid rgba(242,235,221,0.14);background:#fff;line-height:0;}
   .ig-card .instagram-media{margin:0 !important;border:0 !important;box-shadow:none !important;border-radius:0 !important;}
+  @media (prefers-reduced-motion:reduce){.ig-track{animation:none;}.ig-marquee{overflow-x:auto;}}
   .ig-cta{display:inline-flex;align-items:center;gap:10px;margin-top:clamp(28px,3.5vw,42px);background:transparent;border:1px solid rgba(242,235,221,0.4);color:#f2ebdd;padding:13px 26px;border-radius:999px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:background .3s ease,border-color .3s ease,transform .3s ease;}
   .ig-cta:hover{background:#a94e2b;border-color:#a94e2b;transform:translateY(-2px);}
   .ig-cta svg{width:16px;height:16px;}
@@ -120,13 +126,15 @@
   /* animated section dividers — crisp edges + an accent line that draws in */
   .fade-top{position:relative;}
   .fade-top > *{position:relative;z-index:1;}
-  /* animated wave divider — the section's own colour rises along the wave so the
-     two section colours meet ON the wave, with a clay line riding the same curve */
-  .wave-div{position:absolute;top:0;left:0;right:0;height:40px;transform:translateY(-50%);z-index:6;pointer-events:none;background:var(--wave,#16281e);-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020%20L140%2040%20L0%2040%20Z'%20fill='%23000'/%3E%3C/svg%3E") repeat-x left bottom;mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020%20L140%2040%20L0%2040%20Z'%20fill='%23000'/%3E%3C/svg%3E") repeat-x left bottom;-webkit-mask-size:140px 40px;mask-size:140px 40px;animation:wave-fill 7s linear infinite;}
-  .wave-div::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020'%20fill='none'%20stroke='%23c88a52'%20stroke-width='2'%20stroke-linecap='round'/%3E%3C/svg%3E") repeat-x left bottom;background-size:140px 40px;opacity:.7;animation:wave-stroke 7s linear infinite;}
+  /* animated wave divider — the previous section's colour fills the whole band,
+     the section's own colour is masked to the area below the wave, so the two
+     colours meet exactly ON the wave (no straight seam), clay line rides the curve */
+  .wave-div{position:absolute;top:0;left:0;right:0;height:40px;transform:translateY(-50%);z-index:6;pointer-events:none;background:var(--wave-prev,#16281e);}
+  .wave-div::after{content:"";position:absolute;inset:0;background:var(--wave,#16281e);-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020%20L140%2040%20L0%2040%20Z'%20fill='%23000'/%3E%3C/svg%3E") repeat-x left bottom;mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020%20L140%2040%20L0%2040%20Z'%20fill='%23000'/%3E%3C/svg%3E") repeat-x left bottom;-webkit-mask-size:140px 40px;mask-size:140px 40px;animation:wave-fill 7s linear infinite;}
+  .wave-div::before{content:"";position:absolute;inset:0;z-index:1;background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020'%20fill='none'%20stroke='%23c88a52'%20stroke-width='2'%20stroke-linecap='round'/%3E%3C/svg%3E") repeat-x left bottom;background-size:140px 40px;opacity:.7;animation:wave-stroke 7s linear infinite;}
   @keyframes wave-fill{to{-webkit-mask-position:140px bottom;mask-position:140px bottom;}}
   @keyframes wave-stroke{to{background-position:140px bottom;}}
-  @media (prefers-reduced-motion:reduce){.wave-div,.wave-div::before{animation:none;}}
+  @media (prefers-reduced-motion:reduce){.wave-div::after,.wave-div::before{animation:none;}}
 
   /* video modal */
   #film-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(9,18,13,0.93);backdrop-filter:blur(6px);padding:clamp(16px,4vw,56px);}
@@ -161,12 +169,10 @@
   @media (max-width:560px){
     .reviews-grid{grid-template-columns:1fr;}
   }
-  @media (max-width:720px){
+  @media (max-width:860px){
     .nav-links{display:none;}
-    .nav-right a{display:none;}
-    .nav-right #lang-toggle{display:none;}
     .nav-burger{display:inline-block;}
-    #nav{grid-template-columns:1fr auto 1fr;height:64px;}
+    #nav{height:64px;}
   }
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto;}
@@ -177,19 +183,21 @@
 <body>
 
   <nav id="nav">
-    <div class="nav-links">
-      <a href="#klubi" data-i18n="navKlubi">Klubi</a>
-      <a href="#kentat" data-i18n="navKentat">Kentät</a>
-      <a href="#ravintola" data-i18n="navRavintola">Ravintola</a>
-    </div>
-    <a href="#top" style="display:flex;align-items:center;justify-content:center;">
+    <a href="#top" class="nav-brand">
       <img class="nav-logo" src="./assets/logo-light.png" alt="Kalastajatorpan Tennisklubi">
     </a>
-    <div class="nav-right">
-      <a href="#yhteystiedot" data-i18n="navContact">Yhteystiedot</a>
-      <a href="#varaukset" data-i18n="navBook">Varaa</a>
-      <button id="lang-toggle">EN</button>
+    <div class="nav-center">
+      <div class="nav-links">
+        <a href="#klubi" data-i18n="navKlubi">Klubi</a>
+        <a href="#kentat" data-i18n="navKentat">Kentät</a>
+        <a href="#ravintola" data-i18n="navRavintola">Ravintola</a>
+        <a href="#yhteystiedot" data-i18n="navContact">Yhteystiedot</a>
+        <a href="#varaukset" data-i18n="navBook">Varaa</a>
+      </div>
       <button class="nav-burger" id="nav-burger" aria-label="Valikko" aria-expanded="false" data-i18n="menu">Valikko</button>
+    </div>
+    <div class="nav-right">
+      <button id="lang-toggle">EN</button>
     </div>
   </nav>
 
@@ -209,8 +217,10 @@
 
   <!-- HERO -->
   <section id="top">
+    <!-- hero.mp4 is a compressed, muted 1024px cut of the intro film (assets/intro.mp4);
+         the ?v= query busts stale caches on devices that still hold the old clip -->
     <video id="hero-video" autoplay muted loop playsinline preload="auto" poster="./assets/courts-spring.jpg">
-      <source src="./assets/club-video.mp4" type="video/mp4">
+      <source src="./assets/hero.mp4?v=2" type="video/mp4">
     </video>
     <div class="hero-scrim"></div>
     <div class="hero-scrim2"></div>
@@ -233,7 +243,7 @@
   </section>
 
   <!-- INTRO / KLUBI -->
-  <section id="klubi" class="fade-top" style="--wave:#f2ebdd;background:#f2ebdd;color:#211d17;">
+  <section id="klubi" class="fade-top" style="--wave:#f2ebdd;--wave-prev:#16281e;background:#f2ebdd;color:#211d17;">
     <div class="wave-div"></div>
     <div style="max-width:1000px;margin:0 auto;padding:clamp(90px,12vw,150px) clamp(24px,5vw,56px);text-align:center;">
       <span class="eyebrow" style="color:#a94e2b;" data-i18n="introEyebrow">Klubi vuodesta 1938</span>
@@ -244,7 +254,7 @@
   </section>
 
   <!-- COURTS -->
-  <section id="kentat" class="fade-top" style="--wave:#16281e;position:relative;background:#16281e;">
+  <section id="kentat" class="fade-top" style="--wave:#16281e;--wave-prev:#f2ebdd;position:relative;background:#16281e;">
     <div class="wave-div"></div>
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,84px);align-items:center;">
       <div class="map-figure">
@@ -282,7 +292,7 @@
   </section>
 
   <!-- RESTAURANT -->
-  <section id="ravintola" class="fade-top" style="--wave:#f2ebdd;background:#f2ebdd;color:#211d17;">
+  <section id="ravintola" class="fade-top" style="--wave:#f2ebdd;--wave-prev:#16281e;background:#f2ebdd;color:#211d17;">
     <div class="wave-div"></div>
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);display:grid;grid-template-columns:1.05fr 0.95fr;gap:clamp(40px,6vw,84px);align-items:center;">
       <div>
@@ -296,7 +306,7 @@
   </section>
 
   <!-- BOOKING / PRICING -->
-  <section id="varaukset" class="fade-top" style="--wave:#1c3226;background:#1c3226;color:#f2ebdd;">
+  <section id="varaukset" class="fade-top" style="--wave:#1c3226;--wave-prev:#f2ebdd;background:#1c3226;color:#f2ebdd;">
     <div class="wave-div"></div>
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,84px);">
       <div>
@@ -318,7 +328,7 @@
   </section>
 
   <!-- REVIEWS -->
-  <section id="arvostelut" class="fade-top" style="--wave:#16281e;background:#16281e;color:#f2ebdd;">
+  <section id="arvostelut" class="fade-top" style="--wave:#16281e;--wave-prev:#1c3226;background:#16281e;color:#f2ebdd;">
     <div class="wave-div"></div>
     <div style="max-width:1200px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);">
       <div style="text-align:center;margin-bottom:clamp(40px,5vw,64px);">
@@ -337,7 +347,7 @@
   </section>
 
   <!-- EVENTS -->
-  <section id="tapahtumat" class="fade-top" style="--wave:#f2ebdd;background:#f2ebdd;color:#211d17;">
+  <section id="tapahtumat" class="fade-top" style="--wave:#f2ebdd;--wave-prev:#16281e;background:#f2ebdd;color:#211d17;">
     <div class="wave-div"></div>
     <div style="max-width:1100px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:48px;">
@@ -352,18 +362,30 @@
   </section>
 
   <!-- FOLLOW / SOCIAL + INSTAGRAM EMBEDS -->
-  <section id="seuraa" class="fade-top" style="--wave:#1c3226;background:#1c3226;color:#f2ebdd;">
+  <section id="seuraa" class="fade-top" style="--wave:#1c3226;--wave-prev:#f2ebdd;background:#1c3226;color:#f2ebdd;">
     <div class="wave-div"></div>
-    <div style="max-width:1120px;margin:0 auto;padding:clamp(80px,10vw,120px) clamp(24px,5vw,56px);text-align:center;">
+    <div style="max-width:1120px;margin:0 auto;padding:clamp(80px,10vw,120px) clamp(24px,5vw,56px) 0;text-align:center;">
       <span class="eyebrow" style="color:#c77a54;" data-i18n="followEyebrow">Seuraa meitä</span>
       <h2 class="serif" style="font-weight:500;font-size:clamp(28px,3.4vw,46px);line-height:1.12;margin:16px auto 22px;" data-i18n="followTitle">Kesän kuulumiset somessa</h2>
       <p style="font-size:16px;line-height:1.9;color:#c7c1b5;font-weight:300;margin:0 auto 28px;max-width:52ch;" data-i18n="followBody">Seuraa arkea kentiltä ja terassilta — kuvat, videot ja tapahtumat Instagramissa, YouTubessa ja Facebookissa.</p>
       <div class="socials center" id="socials-main"></div>
-      <!-- Live Instagram embeds (rendered by embed.js). Swap the permalinks to feature other posts. -->
-      <div class="ig-embeds">
-        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOIt2pjjMw-/" data-instgrm-version="14" style="max-width:340px;min-width:300px;width:100%;margin:0;border:0;"></blockquote></div>
-        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DYl4Pm1gkuZ/" data-instgrm-version="14" style="max-width:340px;min-width:300px;width:100%;margin:0;border:0;"></blockquote></div>
+    </div>
+    <!-- Live Instagram embeds (rendered by embed.js) in a full-bleed auto-scrolling strip.
+         The pair of permalinks is repeated 4× so the loop wraps seamlessly; swap the
+         permalinks (in every copy) to feature other posts. -->
+    <div class="ig-marquee">
+      <div class="ig-track">
+        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOIt2pjjMw-/" data-instgrm-version="14" style="max-width:340px;min-width:280px;width:100%;margin:0;border:0;"></blockquote></div>
+        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DYl4Pm1gkuZ/" data-instgrm-version="14" style="max-width:340px;min-width:280px;width:100%;margin:0;border:0;"></blockquote></div>
+        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOIt2pjjMw-/" data-instgrm-version="14" style="max-width:340px;min-width:280px;width:100%;margin:0;border:0;"></blockquote></div>
+        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DYl4Pm1gkuZ/" data-instgrm-version="14" style="max-width:340px;min-width:280px;width:100%;margin:0;border:0;"></blockquote></div>
+        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOIt2pjjMw-/" data-instgrm-version="14" style="max-width:340px;min-width:280px;width:100%;margin:0;border:0;"></blockquote></div>
+        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DYl4Pm1gkuZ/" data-instgrm-version="14" style="max-width:340px;min-width:280px;width:100%;margin:0;border:0;"></blockquote></div>
+        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOIt2pjjMw-/" data-instgrm-version="14" style="max-width:340px;min-width:280px;width:100%;margin:0;border:0;"></blockquote></div>
+        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DYl4Pm1gkuZ/" data-instgrm-version="14" style="max-width:340px;min-width:280px;width:100%;margin:0;border:0;"></blockquote></div>
       </div>
+    </div>
+    <div style="max-width:1120px;margin:0 auto;padding:0 clamp(24px,5vw,56px) clamp(80px,10vw,120px);text-align:center;">
       <a class="ig-cta" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>
         <span data-i18n="igCta">Seuraa @kalastajatorpantennisklubi</span>
@@ -372,7 +394,7 @@
   </section>
 
   <!-- CONTACT / MAP -->
-  <section id="yhteystiedot" class="fade-top" style="--wave:#16281e;background:#16281e;color:#f2ebdd;">
+  <section id="yhteystiedot" class="fade-top" style="--wave:#16281e;--wave-prev:#1c3226;background:#16281e;color:#f2ebdd;">
     <div class="wave-div"></div>
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,120px) clamp(24px,5vw,56px);display:grid;grid-template-columns:0.85fr 1.15fr;gap:clamp(36px,5vw,72px);align-items:stretch;">
       <div>
