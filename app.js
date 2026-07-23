@@ -16,7 +16,7 @@
 
   var FI = {
     navKlubi: "Klubi", navKentat: "Kentät", navRavintola: "Ravintola",
-    navBook: "Varaa", navContact: "Yhteystiedot",
+    navBook: "Varaa", navContact: "Yhteystiedot", menu: "Valikko",
     heroTitle: "Massatennistä meren äärellä<br>vuodesta 1938",
     heroSub: "Perinteikäs ulkotenniskeskus Munkkiniemen puistossa, meren rannassa.",
     heroTag: "Munkkiniemi, Helsinki · Est. 1938",
@@ -72,7 +72,7 @@
 
   var EN = {
     navKlubi: "Club", navKentat: "Courts", navRavintola: "Restaurant",
-    navBook: "Book", navContact: "Contact",
+    navBook: "Book", navContact: "Contact", menu: "Menu",
     heroTitle: "Clay tennis by the sea<br>since 1938",
     heroSub: "A storied outdoor tennis centre in the Munkkiniemi park, right by the shore.",
     heroTag: "Munkkiniemi, Helsinki · Est. 1938",

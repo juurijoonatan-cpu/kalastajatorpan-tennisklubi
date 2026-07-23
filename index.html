@@ -120,10 +120,13 @@
   /* animated section dividers — crisp edges + an accent line that draws in */
   .fade-top{position:relative;}
   .fade-top > *{position:relative;z-index:1;}
-  /* minimalist animated wave divider (nod to "meren äärellä") */
-  .wave-div{position:absolute;top:0;left:0;right:0;height:26px;transform:translateY(-50%);z-index:6;pointer-events:none;background-repeat:repeat-x;background-position:0 50%;background-size:140px 26px;background-image:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2026'%3E%3Cpath%20d='M0%2013%20C%2023%203,%2047%203,%2070%2013%20S%20117%2023,%20140%2013'%20fill='none'%20stroke='%23c88a52'%20stroke-width='2'%20stroke-linecap='round'/%3E%3C/svg%3E");animation:wave-drift 7s linear infinite;opacity:.6;}
-  @keyframes wave-drift{to{background-position:140px 50%;}}
-  @media (prefers-reduced-motion:reduce){.wave-div{animation:none;}}
+  /* animated wave divider — the section's own colour rises along the wave so the
+     two section colours meet ON the wave, with a clay line riding the same curve */
+  .wave-div{position:absolute;top:0;left:0;right:0;height:40px;transform:translateY(-50%);z-index:6;pointer-events:none;background:var(--wave,#16281e);-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020%20L140%2040%20L0%2040%20Z'%20fill='%23000'/%3E%3C/svg%3E") repeat-x left bottom;mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020%20L140%2040%20L0%2040%20Z'%20fill='%23000'/%3E%3C/svg%3E") repeat-x left bottom;-webkit-mask-size:140px 40px;mask-size:140px 40px;animation:wave-fill 7s linear infinite;}
+  .wave-div::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020'%20fill='none'%20stroke='%23c88a52'%20stroke-width='2'%20stroke-linecap='round'/%3E%3C/svg%3E") repeat-x left bottom;background-size:140px 40px;opacity:.7;animation:wave-stroke 7s linear infinite;}
+  @keyframes wave-fill{to{-webkit-mask-position:140px bottom;mask-position:140px bottom;}}
+  @keyframes wave-stroke{to{background-position:140px bottom;}}
+  @media (prefers-reduced-motion:reduce){.wave-div,.wave-div::before{animation:none;}}
 
   /* video modal */
   #film-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(9,18,13,0.93);backdrop-filter:blur(6px);padding:clamp(16px,4vw,56px);}
@@ -139,8 +142,8 @@
   #cookie button{background:#211d17;color:#f2ebdd;border:none;font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:9px 16px;border-radius:2px;cursor:pointer;white-space:nowrap;}
 
   /* mobile menu */
-  .nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:0;}
-  .nav-burger span{display:block;width:22px;height:1.5px;background:#f2ebdd;margin:0 auto;transition:transform .3s ease,opacity .3s ease;}
+  .nav-burger{display:none;background:none;border:none;cursor:pointer;padding:6px 0;font-family:'Archivo',sans-serif;font-size:12px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:#f2ebdd;opacity:.85;transition:opacity .25s ease;}
+  .nav-burger:hover{opacity:1;}
   #mobile-menu{position:fixed;inset:0;z-index:200;background:rgba(13,25,18,0.98);backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s ease;}
   #mobile-menu.open{opacity:1;pointer-events:auto;}
   .mm-close{position:absolute;top:20px;right:24px;background:none;border:none;color:#f2ebdd;font-size:36px;line-height:1;cursor:pointer;}
@@ -162,7 +165,7 @@
     .nav-links{display:none;}
     .nav-right a{display:none;}
     .nav-right #lang-toggle{display:none;}
-    .nav-burger{display:flex;}
+    .nav-burger{display:inline-block;}
     #nav{grid-template-columns:1fr auto 1fr;height:64px;}
   }
   @media (prefers-reduced-motion:reduce){
@@ -186,7 +189,7 @@
       <a href="#yhteystiedot" data-i18n="navContact">Yhteystiedot</a>
       <a href="#varaukset" data-i18n="navBook">Varaa</a>
       <button id="lang-toggle">EN</button>
-      <button class="nav-burger" id="nav-burger" aria-label="Valikko" aria-expanded="false"><span></span><span></span><span></span></button>
+      <button class="nav-burger" id="nav-burger" aria-label="Valikko" aria-expanded="false" data-i18n="menu">Valikko</button>
     </div>
   </nav>
 
@@ -230,7 +233,7 @@
   </section>
 
   <!-- INTRO / KLUBI -->
-  <section id="klubi" class="fade-top" style="background:#f2ebdd;color:#211d17;">
+  <section id="klubi" class="fade-top" style="--wave:#f2ebdd;background:#f2ebdd;color:#211d17;">
     <div class="wave-div"></div>
     <div style="max-width:1000px;margin:0 auto;padding:clamp(90px,12vw,150px) clamp(24px,5vw,56px);text-align:center;">
       <span class="eyebrow" style="color:#a94e2b;" data-i18n="introEyebrow">Klubi vuodesta 1938</span>
@@ -241,7 +244,7 @@
   </section>
 
   <!-- COURTS -->
-  <section id="kentat" class="fade-top" style="position:relative;background:#16281e;">
+  <section id="kentat" class="fade-top" style="--wave:#16281e;position:relative;background:#16281e;">
     <div class="wave-div"></div>
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,84px);align-items:center;">
       <div class="map-figure">
@@ -279,7 +282,7 @@
   </section>
 
   <!-- RESTAURANT -->
-  <section id="ravintola" class="fade-top" style="background:#f2ebdd;color:#211d17;">
+  <section id="ravintola" class="fade-top" style="--wave:#f2ebdd;background:#f2ebdd;color:#211d17;">
     <div class="wave-div"></div>
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);display:grid;grid-template-columns:1.05fr 0.95fr;gap:clamp(40px,6vw,84px);align-items:center;">
       <div>
@@ -293,7 +296,7 @@
   </section>
 
   <!-- BOOKING / PRICING -->
-  <section id="varaukset" class="fade-top" style="background:#1c3226;color:#f2ebdd;">
+  <section id="varaukset" class="fade-top" style="--wave:#1c3226;background:#1c3226;color:#f2ebdd;">
     <div class="wave-div"></div>
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,84px);">
       <div>
@@ -315,7 +318,7 @@
   </section>
 
   <!-- REVIEWS -->
-  <section id="arvostelut" class="fade-top" style="background:#16281e;color:#f2ebdd;">
+  <section id="arvostelut" class="fade-top" style="--wave:#16281e;background:#16281e;color:#f2ebdd;">
     <div class="wave-div"></div>
     <div style="max-width:1200px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);">
       <div style="text-align:center;margin-bottom:clamp(40px,5vw,64px);">
@@ -334,7 +337,7 @@
   </section>
 
   <!-- EVENTS -->
-  <section id="tapahtumat" class="fade-top" style="background:#f2ebdd;color:#211d17;">
+  <section id="tapahtumat" class="fade-top" style="--wave:#f2ebdd;background:#f2ebdd;color:#211d17;">
     <div class="wave-div"></div>
     <div style="max-width:1100px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:48px;">
@@ -349,7 +352,7 @@
   </section>
 
   <!-- FOLLOW / SOCIAL + INSTAGRAM EMBEDS -->
-  <section id="seuraa" class="fade-top" style="background:#1c3226;color:#f2ebdd;">
+  <section id="seuraa" class="fade-top" style="--wave:#1c3226;background:#1c3226;color:#f2ebdd;">
     <div class="wave-div"></div>
     <div style="max-width:1120px;margin:0 auto;padding:clamp(80px,10vw,120px) clamp(24px,5vw,56px);text-align:center;">
       <span class="eyebrow" style="color:#c77a54;" data-i18n="followEyebrow">Seuraa meitä</span>
@@ -369,7 +372,7 @@
   </section>
 
   <!-- CONTACT / MAP -->
-  <section id="yhteystiedot" class="fade-top" style="background:#16281e;color:#f2ebdd;">
+  <section id="yhteystiedot" class="fade-top" style="--wave:#16281e;background:#16281e;color:#f2ebdd;">
     <div class="wave-div"></div>
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,120px) clamp(24px,5vw,56px);display:grid;grid-template-columns:0.85fr 1.15fr;gap:clamp(36px,5vw,72px);align-items:stretch;">
       <div>
