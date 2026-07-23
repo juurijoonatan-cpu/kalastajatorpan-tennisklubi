@@ -63,7 +63,7 @@
     followBody: "Seuraa arkea kentiltä ja terassilta — kuvat, videot ja tapahtumat Instagramissa, YouTubessa ja Facebookissa.",
     igSub: "Seuraa Instagramissa", igFollow: "Seuraa", igCta: "Seuraa @kalastajatorpantennisklubi",
     locEyebrow: "Yhteystiedot", locTitle: "Löydä perille",
-    locAddress: "Osoite", locBooking: "Tuntivaraukset", locHours: "Aukioloajat", locSocial: "Somessa",
+    locAddress: "Osoite", locBooking: "Yhteystiedot", locHours: "Aukioloajat", locSocial: "Somessa",
     footBlurb: "Perinteikäs ulkotenniskeskus Munkkiniemessä, meren äärellä. Massatennistä on pelattu Torpalla vuodesta 1938. Klubilla toimii LTC-33 r.f., yksi Suomen vanhimmista tennisseuroista.",
     footHrs: [{ k: "Ma–To", v: "07:00–22:30" }, { k: "Pe", v: "07:00–20:30" }, { k: "La", v: "09:00–20:30" }, { k: "Su", v: "09:00–22:30" }],
     footEst: "LTC-33 r.f. · Perustettu 1933",
@@ -119,7 +119,7 @@
     followBody: "Follow life on the courts and the terrace — photos, videos and events on Instagram, YouTube and Facebook.",
     igSub: "Follow on Instagram", igFollow: "Follow", igCta: "Follow @kalastajatorpantennisklubi",
     locEyebrow: "Contact", locTitle: "Find your way here",
-    locAddress: "Address", locBooking: "Court bookings", locHours: "Opening hours", locSocial: "On social",
+    locAddress: "Address", locBooking: "Contact", locHours: "Opening hours", locSocial: "On social",
     footBlurb: "A storied outdoor tennis centre in Munkkiniemi, by the sea. Clay tennis has been played here since 1938. The club is home to LTC-33 r.f., one of Finland’s oldest tennis clubs.",
     footHrs: [{ k: "Mon–Thu", v: "07:00–22:30" }, { k: "Fri", v: "07:00–20:30" }, { k: "Sat", v: "09:00–20:30" }, { k: "Sun", v: "09:00–22:30" }],
     footEst: "LTC-33 r.f. · Founded 1933",
@@ -128,6 +128,56 @@
 
   var DICT = { fi: FI, en: EN };
   var lang = "fi";
+  var chatRelang = null;
+
+  /* ---------- Chat assistant content (scripted FAQ, no backend) ---------- */
+  var PLAYTOMIC = "https://playtomic.io/kalastajatorpan-tennisklubi/112e053d-fc2c-4745-ad78-db53dec5f0cf";
+  var CHAT = {
+    fi: {
+      title: "Torppa-avustaja", sub: "Vastaan yleisiin kysymyksiin", placeholder: "Kirjoita kysymys…",
+      greeting: "Hei! 👋 Autan mielelläni varauksissa, aukioloajoissa, hinnoissa, ravintolassa ja sijainnissa. Mitä haluaisit tietää?",
+      chips: [["Varaukset", "booking"], ["Aukioloajat", "hours"], ["Hinnat", "prices"], ["Sijainti", "location"], ["Ravintola", "restaurant"]],
+      fallback: "Hyvä kysymys! En osaa vielä vastata tuohon itse. Soita 010 423 9960 tai kirjoita <a href='mailto:juri.raikkonen@tennisklubi.fi'>juri.raikkonen@tennisklubi.fi</a> — autamme mielellämme.",
+      answers: {
+        booking: "Varaa vuoro helposti Playtomicissa: <a href='" + PLAYTOMIC + "' target='_blank' rel='noopener'>avaa Playtomic →</a><br>Kentät ovat auki ma–to 7–22, pe 7–21, la 9–21 ja su 9–22. Puhelinvaraukset: 010 423 9960 (ei palvelumaksua).",
+        hours: "Kentät: ma–to 7–22, pe 7–21, la 9–21, su 9–22.<br>Klubiravintola: aamiainen 7:30–10:30, salaattibuffet 12–20, club menu 9–22:30.",
+        prices: "Kenttävuoron hinnat: arki 7:00–9:30 <b>36€</b>, 9:30–15:30 <b>29€</b>, 15:30–22 <b>39€</b>, viikonloppu <b>36€</b>.",
+        location: "Kärkitie 4, 00330 Helsinki — Munkkiniemessä, meren äärellä. <a href='#yhteystiedot'>Katso kartta →</a>",
+        restaurant: "Klubiravintola & terassi tarjoaa aamiaisbuffetin arkisin, salaattibuffetin joka päivä kesällä sekä club menun herkut. Tervetuloa myös ilman mailaa! 🥐",
+        contact: "Puhelin <b>010 423 9960</b>, sähköposti <a href='mailto:juri.raikkonen@tennisklubi.fi'>juri.raikkonen@tennisklubi.fi</a>.",
+        events: "Kesän kohokohtia: kauden avaus 17.5., Bermuda-turnaus 4.7. ja ITF Helsinki Midnight Sun Open 20.–26.7. 🎾",
+        hello: "Hei! Kysy vaikka varauksista, hinnoista, ravintolasta tai aukioloajoista. 🎾"
+      }
+    },
+    en: {
+      title: "Torppa Assistant", sub: "Answers to common questions", placeholder: "Type a question…",
+      greeting: "Hi! 👋 I can help with bookings, opening hours, prices, the restaurant and how to find us. What would you like to know?",
+      chips: [["Booking", "booking"], ["Hours", "hours"], ["Prices", "prices"], ["Location", "location"], ["Restaurant", "restaurant"]],
+      fallback: "Great question! I can't answer that one myself yet. Please call 010 423 9960 or email <a href='mailto:juri.raikkonen@tennisklubi.fi'>juri.raikkonen@tennisklubi.fi</a> — we're happy to help.",
+      answers: {
+        booking: "Book a court easily on Playtomic: <a href='" + PLAYTOMIC + "' target='_blank' rel='noopener'>open Playtomic →</a><br>Courts are open Mon–Thu 07–22, Fri 07–21, Sat 09–21 and Sun 09–22. Phone bookings: 010 423 9960 (no service fee).",
+        hours: "Courts: Mon–Thu 07–22, Fri 07–21, Sat 09–21, Sun 09–22.<br>Restaurant: breakfast 07:30–10:30, salad buffet 12–20, club menu 09–22:30.",
+        prices: "Court prices: weekday 07:00–09:30 <b>€36</b>, 09:30–15:30 <b>€29</b>, 15:30–22 <b>€39</b>, weekend <b>€36</b>.",
+        location: "Kärkitie 4, 00330 Helsinki — in Munkkiniemi, by the sea. <a href='#yhteystiedot'>See the map →</a>",
+        restaurant: "The clubhouse restaurant & terrace serves a weekday breakfast buffet, a summer salad buffet and club-menu favourites. Welcome even without a racquet! 🥐",
+        contact: "Phone <b>010 423 9960</b>, email <a href='mailto:juri.raikkonen@tennisklubi.fi'>juri.raikkonen@tennisklubi.fi</a>.",
+        events: "Summer highlights: season opening 17 May, Bermuda Tournament 4 Jul and the ITF Helsinki Midnight Sun Open 20–26 Jul. 🎾",
+        hello: "Hi! Ask me about bookings, prices, the restaurant or opening hours. 🎾"
+      }
+    }
+  };
+  function chatTopic(q) {
+    q = " " + q.toLowerCase() + " ";
+    if (/(vara|book|court|kentt|ken-)/.test(q)) return "booking";
+    if (/(auki|open|hour|aukiolo|kello| klo|milloin|when)/.test(q)) return "hours";
+    if (/(hin|price|cost|maksa|euro|€|paljon|how much)/.test(q)) return "prices";
+    if (/(sijain|osoit|locat|address|where|miss|kartta| map|perille|directions)/.test(q)) return "location";
+    if (/(ravinto|restaur|food|eat|syö|syo|aamiai|breakfast|lounas|terassi|menu|kahvi|coffee)/.test(q)) return "restaurant";
+    if (/(yhtey|contact|puhelin|phone|email|sähk|sahk|soit|mail)/.test(q)) return "contact";
+    if (/(tapahtu|event|turnau|tournament|midnight|open by freja)/.test(q)) return "events";
+    if (/(^| )(hei|moi|terve|hello|hi|hey|good)/.test(q)) return "hello";
+    return null;
+  }
 
   /* ---------- Helpers ---------- */
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
@@ -208,6 +258,7 @@
     var label = lang === "fi" ? "EN" : "FI";
     $("#lang-toggle").textContent = label;
     var ml = $("#lang-toggle-m"); if (ml) ml.textContent = label;
+    if (chatRelang) chatRelang();
     resetRating();
   }
 
@@ -310,12 +361,16 @@
      the repeating mask stays seamless on iOS Safari. */
   function initWaves() {
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    var root = document.documentElement, PERIOD = 140, SPEED = 20, MX = 16; // px, px/sec, px
-    var mx = 0, mxTarget = 0, flow = 0, last = null;
+    var waves = $all(".wave-div");
+    if (!waves.length) return;
+    var PERIOD = 140, SPEED = 20, MX = 16; // px, px/sec, px
+    var mx = 0, mxTarget = 0, flow = 0, last = null, ptrY = -9999, ptrOn = false;
     if (window.matchMedia && window.matchMedia("(hover: hover)").matches) {
       window.addEventListener("mousemove", function (e) {
         mxTarget = (e.clientX / window.innerWidth - 0.5) * 2 * MX;
+        ptrY = e.clientY; ptrOn = true;
       }, { passive: true });
+      document.addEventListener("mouseleave", function () { ptrOn = false; }, { passive: true });
     }
     // device tilt (best effort; no-ops where orientation isn't granted)
     window.addEventListener("deviceorientation", function (e) {
@@ -327,10 +382,41 @@
       var dt = Math.min(100, t - last) / 1000; last = t;
       flow = (flow + SPEED * dt) % PERIOD;
       mx += (mxTarget - mx) * 0.08;
-      root.style.setProperty("--wfx", (flow + mx).toFixed(2) + "px");
+      var base = flow + mx;
+      for (var i = 0; i < waves.length; i++) {
+        var w = waves[i], boost = 0, line = 0.7;
+        if (ptrOn) {
+          var r = w.getBoundingClientRect();
+          // proximity: 1 when the pointer sits right on the wave band, easing out over ~150px
+          var prox = Math.max(0, 1 - Math.abs((r.top + r.height / 2) - ptrY) / 150);
+          boost = prox * 34;         // the wave ripples faster where you hover
+          line = 0.7 + prox * 0.3;   // and its clay line brightens
+        }
+        w.style.setProperty("--wfx", (base + boost).toFixed(2) + "px");
+        w.style.setProperty("--wline", line.toFixed(2));
+      }
       requestAnimationFrame(frame);
     };
     requestAnimationFrame(frame);
+  }
+
+  /* highlight the nav link for whichever section is at the viewport middle */
+  function initScrollSpy() {
+    var links = $all(".nav-links a");
+    if (!links.length || !("IntersectionObserver" in window)) return;
+    var map = {};
+    links.forEach(function (a) {
+      var h = a.getAttribute("href");
+      if (h && h.charAt(0) === "#") map[h.slice(1)] = a;
+    });
+    var setActive = function (id) {
+      links.forEach(function (a) { a.classList.remove("active"); });
+      if (map[id]) map[id].classList.add("active");
+    };
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) setActive(en.target.id); });
+    }, { rootMargin: "-50% 0px -49% 0px", threshold: 0 });
+    $all("section[id]").forEach(function (s) { io.observe(s); });
   }
 
   function initHeroVideo() {
@@ -391,6 +477,62 @@
     window.addEventListener("load", toTop);
   }
 
+  /* ---------- Chat assistant (scripted, client-side) ---------- */
+  function initChatbot() {
+    var launch = $("#chat-launch"), panel = $("#chat-panel"), body = $("#chat-body"),
+        chips = $("#chat-chips"), input = $("#chat-text"), send = $("#chat-send"), close = $("#chat-close");
+    if (!launch || !panel) return;
+    var started = false;
+    var c = function () { return CHAT[lang]; };
+    function addMsg(html, who) {
+      var d = document.createElement("div");
+      d.className = "chat-msg " + who;
+      d.innerHTML = html;
+      body.appendChild(d);
+      body.scrollTop = body.scrollHeight;
+    }
+    function renderChips() {
+      chips.innerHTML = "";
+      c().chips.forEach(function (ch) {
+        var b = document.createElement("button");
+        b.className = "chat-chip"; b.type = "button"; b.textContent = ch[0];
+        b.addEventListener("click", function () { ask(ch[0], ch[1]); });
+        chips.appendChild(b);
+      });
+    }
+    function ask(text, topic) {
+      addMsg(esc(text), "user");
+      var ans = c().answers[topic || chatTopic(text)] || c().fallback;
+      setTimeout(function () { addMsg(ans, "bot"); }, 340);
+    }
+    function refreshTexts() {
+      $("#chat-title").textContent = c().title;
+      $("#chat-sub").textContent = c().sub;
+      input.placeholder = c().placeholder;
+    }
+    function start() {
+      if (started) return; started = true;
+      refreshTexts(); renderChips(); addMsg(c().greeting, "bot");
+    }
+    function open() {
+      panel.classList.add("open"); panel.setAttribute("aria-hidden", "false");
+      launch.classList.add("hide"); start();
+      setTimeout(function () { try { input.focus(); } catch (e) {} }, 320);
+    }
+    function shut() {
+      panel.classList.remove("open"); panel.setAttribute("aria-hidden", "true");
+      launch.classList.remove("hide");
+    }
+    var submit = function () { var v = input.value.trim(); if (!v) return; input.value = ""; ask(v); };
+    launch.addEventListener("click", open);
+    close.addEventListener("click", shut);
+    send.addEventListener("click", submit);
+    input.addEventListener("keydown", function (e) { if (e.key === "Enter") submit(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && panel.classList.contains("open")) shut(); });
+    // keep an open chat's chrome in sync with a language switch (messages stay)
+    chatRelang = function () { if (started) { refreshTexts(); renderChips(); } };
+  }
+
   /* ---------- Boot ---------- */
   function boot() {
     initScrollReset();
@@ -405,6 +547,8 @@
     initRatingCounter();
     initMarkers();
     initMobileMenu();
+    initScrollSpy();
+    initChatbot();
     $("#lang-toggle").addEventListener("click", function () { setLang(lang === "fi" ? "en" : "fi"); });
   }
 
