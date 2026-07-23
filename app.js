@@ -535,14 +535,20 @@
     function reveal() { clearTimeout(tuckT); launch.classList.remove("tucked"); }
     // On mobile the panel is a bottom sheet; keep it pinned to the *visible*
     // viewport so the on-screen keyboard never covers the input.
+    function clearSheet() { panel.style.top = ""; panel.style.bottom = ""; panel.style.height = ""; }
     function syncSheet() {
       if (window.innerWidth > 560 || !window.visualViewport || !panel.classList.contains("open")) {
-        panel.style.height = ""; panel.style.bottom = ""; return;
+        clearSheet(); return;
       }
       var vv = window.visualViewport;
-      var overlap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop); // keyboard height
-      panel.style.bottom = overlap + "px";
-      panel.style.height = Math.round(vv.height * 0.9) + "px";
+      var kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop); // keyboard overlap
+      var topGap = Math.max(52, Math.round(vv.height * 0.12));             // small peek of the page
+      // pin BOTH edges to the visible viewport: top just below the peek, bottom
+      // just above the keyboard. Spanning both edges means the sheet always fills
+      // the visible area — no gap for the page to show through, input never hidden.
+      panel.style.top = Math.round(vv.offsetTop + topGap) + "px";
+      panel.style.bottom = kb + "px";
+      panel.style.height = "auto";
     }
     if (window.visualViewport) {
       window.visualViewport.addEventListener("resize", syncSheet);
@@ -556,7 +562,7 @@
     }
     function shut() {
       panel.classList.remove("open"); panel.setAttribute("aria-hidden", "true");
-      launch.classList.remove("hide"); panel.style.height = ""; panel.style.bottom = "";
+      launch.classList.remove("hide"); clearSheet();
       scheduleTuck(600);
     }
     var submit = function () { var v = input.value.trim(); if (!v) return; input.value = ""; ask(v); };
