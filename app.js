@@ -299,7 +299,7 @@
     // show the title/logo for a moment, then let it fade so the film plays clean
     var faded = false;
     var fade = function () { if (!faded) { faded = true; copy.classList.add("faded"); } };
-    setTimeout(fade, 4800);
+    setTimeout(fade, 9000);
     // if the visitor starts scrolling away, fade immediately
     window.addEventListener("scroll", function () { if (window.scrollY > 40) fade(); }, { passive: true });
   }
@@ -309,7 +309,7 @@
     if (!vid) return;
     vid.muted = true;
     // Skip the intro logo (first ~5s) and the outro logo (last ~6s) in the loop
-    var START = 5, TAIL = 6;
+    var START = 5, TAIL = 10;
     var trimmable = function () { return isFinite(vid.duration) && vid.duration > START + TAIL + 1; };
     var seekStart = function () { try { if (trimmable() && vid.currentTime < START) vid.currentTime = START; } catch (e) {} };
     vid.removeAttribute("loop");
