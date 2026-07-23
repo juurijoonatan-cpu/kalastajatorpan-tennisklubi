@@ -299,7 +299,7 @@
     // hold the title/logo well into the film, then let it vanish progressively
     var faded = false;
     var fade = function () { if (!faded) { faded = true; copy.classList.add("faded"); } };
-    setTimeout(fade, 14000);
+    setTimeout(fade, 22000);
     // if the visitor starts scrolling away, fade immediately
     window.addEventListener("scroll", function () { if (window.scrollY > 40) fade(); }, { passive: true });
   }
@@ -374,8 +374,26 @@
   }
 
 
+  /* always open at the top — ignore any #section left in the URL from an earlier
+     in-page click (and the browser's remembered scroll position on reload) */
+  function initScrollReset() {
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    if (location.hash) {
+      try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+    }
+    var toTop = function () {
+      var el = document.documentElement, prev = el.style.scrollBehavior;
+      el.style.scrollBehavior = "auto";      // never animate this correction
+      window.scrollTo(0, 0);
+      el.style.scrollBehavior = prev;
+    };
+    toTop();
+    window.addEventListener("load", toTop);
+  }
+
   /* ---------- Boot ---------- */
   function boot() {
+    initScrollReset();
     renderSocials();
     setLang("fi");
     initNavScroll();
