@@ -204,8 +204,20 @@
     var t = DICT[lang];
     applyText(t);
     renderLists(t);
-    $("#lang-toggle").textContent = lang === "fi" ? "EN" : "FI";
+    updateMarkers();
+    var label = lang === "fi" ? "EN" : "FI";
+    $("#lang-toggle").textContent = label;
+    var ml = $("#lang-toggle-m"); if (ml) ml.textContent = label;
     resetRating();
+  }
+
+  function updateMarkers() {
+    $all(".ball-marker").forEach(function (m) {
+      var name = m.getAttribute(lang === "fi" ? "data-fi" : "data-en") || "";
+      var tip = m.querySelector(".mk-tip");
+      if (tip) tip.textContent = name;
+      m.setAttribute("aria-label", name);
+    });
   }
 
   /* ---------- Animated rating counter (counts up when in view) ---------- */
@@ -296,11 +308,62 @@
     var vid = $("#hero-video");
     if (!vid) return;
     vid.muted = true;
+    // Skip the intro logo (first ~5s) and the outro logo (last ~6s) in the loop
+    var START = 5, TAIL = 6;
+    var trimmable = function () { return isFinite(vid.duration) && vid.duration > START + TAIL + 1; };
+    var seekStart = function () { try { if (trimmable() && vid.currentTime < START) vid.currentTime = START; } catch (e) {} };
+    vid.removeAttribute("loop");
+    vid.addEventListener("loadedmetadata", seekStart);
+    if (vid.readyState >= 1) seekStart();
     var tryPlay = function () { var p = vid.play(); if (p && p.catch) p.catch(function () {}); };
+    var loopBack = function () { try { vid.currentTime = START; } catch (e) {} tryPlay(); };
+    vid.addEventListener("timeupdate", function () {
+      if (trimmable() && vid.currentTime >= vid.duration - TAIL) loopBack();
+    });
+    vid.addEventListener("ended", loopBack);
     vid.addEventListener("canplay", tryPlay, { once: true });
     tryPlay();
     var kick = function () { if (vid.paused) tryPlay(); };
     window.addEventListener("pointerdown", kick, { passive: true, once: true });
+  }
+
+  function initMarkers() {
+    var markers = $all(".ball-marker");
+    if (!markers.length) return;
+    markers.forEach(function (m) {
+      m.addEventListener("click", function (e) {
+        e.preventDefault();
+        var wasOpen = m.classList.contains("open");
+        markers.forEach(function (x) { x.classList.remove("open"); });
+        if (!wasOpen) m.classList.add("open");
+      });
+    });
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest(".ball-marker")) markers.forEach(function (x) { x.classList.remove("open"); });
+    });
+  }
+
+  function initMobileMenu() {
+    var menu = $("#mobile-menu"), burger = $("#nav-burger"), close = $("#mm-close");
+    if (!menu || !burger) return;
+    var open = function () { menu.classList.add("open"); menu.setAttribute("aria-hidden", "false"); burger.setAttribute("aria-expanded", "true"); document.body.style.overflow = "hidden"; };
+    var shut = function () { menu.classList.remove("open"); menu.setAttribute("aria-hidden", "true"); burger.setAttribute("aria-expanded", "false"); document.body.style.overflow = ""; };
+    burger.addEventListener("click", open);
+    if (close) close.addEventListener("click", shut);
+    $all(".mm-links a").forEach(function (a) { a.addEventListener("click", shut); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && menu.classList.contains("open")) shut(); });
+    var ml = $("#lang-toggle-m");
+    if (ml) ml.addEventListener("click", function () { setLang(lang === "fi" ? "en" : "fi"); });
+  }
+
+  function initDividers() {
+    var ds = $all(".sdiv");
+    if (!ds.length) return;
+    if (!("IntersectionObserver" in window)) { ds.forEach(function (d) { d.classList.add("in"); }); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+    }, { threshold: 0.55 });
+    ds.forEach(function (d) { io.observe(d); });
   }
 
   /* ---------- Boot ---------- */
@@ -313,6 +376,9 @@
     initHeroVideo();
     initHeroReveal();
     initRatingCounter();
+    initMarkers();
+    initMobileMenu();
+    initDividers();
     $("#lang-toggle").addEventListener("click", function () { setLang(lang === "fi" ? "en" : "fi"); });
   }
 

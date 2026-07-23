@@ -16,7 +16,7 @@
 <style>
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
-  body{margin:0;background:#0d0d0b;color:#f2ebdd;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased;}
+  body{margin:0;background:#0d0d0b;color:#f2ebdd;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
   a{color:inherit;text-decoration:none;}
   img{max-width:100%;}
   ::selection{background:#a94e2b;color:#fff;}
@@ -105,6 +105,9 @@
   .ball-marker:hover::after,.ball-marker:focus-visible::after{animation:mk-pulse 1.5s ease-out infinite;}
   @keyframes mk-pulse{0%{transform:scale(0.72);opacity:.85;}100%{transform:scale(1.75);opacity:0;}}
   @media (prefers-reduced-motion:reduce){.ball-marker .seam{animation:none;}}
+  .ball-marker .mk-tip{position:absolute;bottom:calc(100% + 11px);left:50%;transform:translateX(-50%) translateY(4px);white-space:nowrap;background:#0d0d0b;color:#f2ebdd;font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.05em;padding:6px 12px;border-radius:5px;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;box-shadow:0 10px 24px rgba(0,0,0,0.5);z-index:9;font-weight:500;}
+  .ball-marker .mk-tip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#0d0d0b;}
+  .ball-marker:hover .mk-tip,.ball-marker.open .mk-tip,.ball-marker:focus-visible .mk-tip{opacity:1;transform:translateX(-50%) translateY(0);}
 
   /* Instagram embeds — framed as designed cards */
   .ig-embeds{display:flex;flex-wrap:wrap;gap:clamp(16px,2vw,26px);justify-content:center;align-items:stretch;margin-top:clamp(34px,4vw,52px);}
@@ -115,10 +118,16 @@
   .ig-cta:hover{background:#a94e2b;border-color:#a94e2b;transform:translateY(-2px);}
   .ig-cta svg{width:16px;height:16px;}
 
-  /* smooth section fades — top edge eases from the previous section's colour */
+  /* animated section dividers — crisp edges + an accent line that draws in */
   .fade-top{position:relative;}
-  .fade-top::before{content:"";position:absolute;top:0;left:0;right:0;height:clamp(90px,11vw,150px);background:linear-gradient(180deg,var(--from) 0%,var(--to) 100%);pointer-events:none;z-index:0;}
   .fade-top > *{position:relative;z-index:1;}
+  .sdiv{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:13px;z-index:6;pointer-events:none;}
+  .sdiv .d-line{height:1px;width:0;background:linear-gradient(90deg,transparent,#c77a54);transition:width 1.1s cubic-bezier(.22,.61,.36,1);}
+  .sdiv .d-line.r{background:linear-gradient(90deg,#c77a54,transparent);}
+  .sdiv.in .d-line{width:clamp(44px,11vw,116px);}
+  .sdiv .d-dot{width:9px;height:9px;background:#a94e2b;border-radius:2px;transform:rotate(45deg) scale(0);opacity:0;transition:transform .6s ease .15s,opacity .6s ease .15s;flex:0 0 auto;}
+  .sdiv.in .d-dot{transform:rotate(45deg) scale(1);opacity:1;}
+  @media (prefers-reduced-motion:reduce){.sdiv .d-line{transition:none;}.sdiv .d-dot{transition:none;}}
 
   /* video modal */
   #film-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(6,5,4,0.92);backdrop-filter:blur(6px);padding:clamp(16px,4vw,56px);}
@@ -133,6 +142,17 @@
   #cookie span{font-size:13.5px;line-height:1.5;}
   #cookie button{background:#211d17;color:#f2ebdd;border:none;font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:9px 16px;border-radius:2px;cursor:pointer;white-space:nowrap;}
 
+  /* mobile menu */
+  .nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:0;}
+  .nav-burger span{display:block;width:22px;height:1.5px;background:#f2ebdd;margin:0 auto;transition:transform .3s ease,opacity .3s ease;}
+  #mobile-menu{position:fixed;inset:0;z-index:200;background:rgba(9,8,6,0.98);backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s ease;}
+  #mobile-menu.open{opacity:1;pointer-events:auto;}
+  .mm-close{position:absolute;top:20px;right:24px;background:none;border:none;color:#f2ebdd;font-size:36px;line-height:1;cursor:pointer;}
+  .mm-links{display:flex;flex-direction:column;align-items:center;gap:26px;text-align:center;}
+  .mm-links a{font-family:'Playfair Display',serif;font-size:clamp(26px,8vw,34px);color:#f2ebdd;font-weight:500;}
+  .mm-links a:hover{color:#c77a54;}
+  #lang-toggle-m{margin-top:22px;background:none;border:1px solid rgba(242,235,221,0.4);color:#f2ebdd;font-family:'Archivo',sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;padding:12px 30px;border-radius:999px;cursor:pointer;}
+
   /* responsive */
   @media (max-width:900px){
     .two-col{grid-template-columns:1fr !important;}
@@ -144,7 +164,10 @@
   }
   @media (max-width:720px){
     .nav-links{display:none;}
-    #nav{grid-template-columns:1fr auto 1fr;}
+    .nav-right a{display:none;}
+    .nav-right #lang-toggle{display:none;}
+    .nav-burger{display:flex;}
+    #nav{grid-template-columns:1fr auto 1fr;height:64px;}
   }
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto;}
@@ -167,8 +190,23 @@
       <a href="#yhteystiedot" data-i18n="navContact">Yhteystiedot</a>
       <a href="#varaukset" data-i18n="navBook">Varaa</a>
       <button id="lang-toggle">EN</button>
+      <button class="nav-burger" id="nav-burger" aria-label="Valikko" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </nav>
+
+  <!-- MOBILE MENU -->
+  <div id="mobile-menu" aria-hidden="true">
+    <button class="mm-close" id="mm-close" aria-label="Sulje">&times;</button>
+    <nav class="mm-links">
+      <a href="#klubi" data-i18n="navKlubi">Klubi</a>
+      <a href="#kentat" data-i18n="navKentat">Kentät</a>
+      <a href="#ravintola" data-i18n="navRavintola">Ravintola</a>
+      <a href="#arvostelut" data-i18n="revEyebrow">Arvostelut</a>
+      <a href="#yhteystiedot" data-i18n="navContact">Yhteystiedot</a>
+      <a href="#varaukset" data-i18n="navBook">Varaa</a>
+      <button id="lang-toggle-m">EN</button>
+    </nav>
+  </div>
 
   <!-- HERO -->
   <section id="top">
@@ -198,7 +236,8 @@
   </section>
 
   <!-- INTRO / KLUBI -->
-  <section id="klubi" class="fade-top" style="--from:#0a0806;--to:#f2ebdd;background:#f2ebdd;color:#211d17;">
+  <section id="klubi" class="fade-top" style="background:#f2ebdd;color:#211d17;">
+    <div class="sdiv"><span class="d-line"></span><span class="d-dot"></span><span class="d-line r"></span></div>
     <div style="max-width:1000px;margin:0 auto;padding:clamp(90px,12vw,150px) clamp(24px,5vw,56px);text-align:center;">
       <span class="eyebrow" style="color:#a94e2b;" data-i18n="introEyebrow">Klubi vuodesta 1938</span>
       <h2 class="serif" style="font-weight:500;font-size:clamp(30px,4.2vw,58px);line-height:1.16;margin:26px auto 0;max-width:18ch;text-wrap:balance;" data-i18n="introTitle">Munkkiniemen sydämessä, meren äärellä</h2>
@@ -208,18 +247,19 @@
   </section>
 
   <!-- COURTS -->
-  <section id="kentat" class="fade-top" style="--from:#f2ebdd;--to:#0d0d0b;position:relative;background:#0d0d0b;">
+  <section id="kentat" class="fade-top" style="position:relative;background:#0d0d0b;">
+    <div class="sdiv"><span class="d-line"></span><span class="d-dot"></span><span class="d-line r"></span></div>
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,84px);align-items:center;">
       <div class="map-figure">
         <img src="./assets/aerial.jpg" alt="Ilmakuva massakentistä" style="width:100%;height:auto;display:block;border-radius:3px;box-shadow:0 30px 80px rgba(0,0,0,0.5);">
         <span style="position:absolute;top:18px;left:18px;background:rgba(13,13,11,0.72);backdrop-filter:blur(4px);padding:7px 14px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#f2ebdd;border-radius:2px;z-index:3;" data-i18n="aerialTag">Ilmakuva · Kalastajatorppa</span>
-        <button class="ball-marker" style="left:35%;top:40%;" aria-label="Kenttä 1"><span class="seam"></span><span class="lbl">1</span></button>
-        <button class="ball-marker" style="left:61%;top:33%;" aria-label="Kenttä 2"><span class="seam"></span><span class="lbl">2</span></button>
-        <button class="ball-marker" style="left:38%;top:60%;" aria-label="Kenttä 3"><span class="seam"></span><span class="lbl">3</span></button>
-        <button class="ball-marker" style="left:61%;top:57%;" aria-label="Kenttä 4"><span class="seam"></span><span class="lbl">4</span></button>
-        <button class="ball-marker" style="left:40%;top:81%;" aria-label="Kenttä 5"><span class="seam"></span><span class="lbl">5</span></button>
-        <button class="ball-marker" style="left:62%;top:79%;" aria-label="Kenttä 6"><span class="seam"></span><span class="lbl">6</span></button>
-        <button class="ball-marker rest" style="left:16%;top:54%;" aria-label="Klubiravintola"><span class="seam"></span><span class="lbl"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2v7a2 2 0 0 0 2 2v11M9 2v9M7 2v3M19 2c-1.5 0-2.5 2-2.5 5s1 4 2.5 4v10"/></svg></span></button>
+        <button class="ball-marker" style="left:34%;top:41%;" data-fi="Kenttä 1" data-en="Court 1" aria-label="Kenttä 1"><span class="seam"></span><span class="lbl">1</span><span class="mk-tip"></span></button>
+        <button class="ball-marker" style="left:60%;top:34%;" data-fi="Kenttä 2" data-en="Court 2" aria-label="Kenttä 2"><span class="seam"></span><span class="lbl">2</span><span class="mk-tip"></span></button>
+        <button class="ball-marker" style="left:37%;top:61%;" data-fi="Kenttä 3" data-en="Court 3" aria-label="Kenttä 3"><span class="seam"></span><span class="lbl">3</span><span class="mk-tip"></span></button>
+        <button class="ball-marker" style="left:61%;top:58%;" data-fi="Kenttä 4" data-en="Court 4" aria-label="Kenttä 4"><span class="seam"></span><span class="lbl">4</span><span class="mk-tip"></span></button>
+        <button class="ball-marker" style="left:39%;top:82%;" data-fi="Kenttä 5" data-en="Court 5" aria-label="Kenttä 5"><span class="seam"></span><span class="lbl">5</span><span class="mk-tip"></span></button>
+        <button class="ball-marker" style="left:62%;top:80%;" data-fi="Kenttä 6" data-en="Court 6" aria-label="Kenttä 6"><span class="seam"></span><span class="lbl">6</span><span class="mk-tip"></span></button>
+        <button class="ball-marker rest" style="left:15%;top:55%;" data-fi="Klubiravintola & terassi" data-en="Clubhouse restaurant" aria-label="Klubiravintola"><span class="seam"></span><span class="lbl"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2v7a2 2 0 0 0 2 2v11M9 2v9M7 2v3M19 2c-1.5 0-2.5 2-2.5 5s1 4 2.5 4v10"/></svg></span><span class="mk-tip"></span></button>
       </div>
       <div>
         <span class="eyebrow" style="color:#c77a54;" data-i18n="courtsEyebrow">Kentät</span>
@@ -245,7 +285,8 @@
   </section>
 
   <!-- RESTAURANT -->
-  <section id="ravintola" class="fade-top" style="--from:#0d0d0b;--to:#f2ebdd;background:#f2ebdd;color:#211d17;">
+  <section id="ravintola" class="fade-top" style="background:#f2ebdd;color:#211d17;">
+    <div class="sdiv"><span class="d-line"></span><span class="d-dot"></span><span class="d-line r"></span></div>
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);display:grid;grid-template-columns:1.05fr 0.95fr;gap:clamp(40px,6vw,84px);align-items:center;">
       <div>
         <span class="eyebrow" style="color:#a94e2b;" data-i18n="restEyebrow">Klubiravintola</span>
@@ -258,7 +299,8 @@
   </section>
 
   <!-- BOOKING / PRICING -->
-  <section id="varaukset" class="fade-top" style="--from:#f2ebdd;--to:#161310;background:#161310;color:#f2ebdd;">
+  <section id="varaukset" class="fade-top" style="background:#161310;color:#f2ebdd;">
+    <div class="sdiv"><span class="d-line"></span><span class="d-dot"></span><span class="d-line r"></span></div>
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,84px);">
       <div>
         <span class="eyebrow" style="color:#c77a54;" data-i18n="bookEyebrow">Varaukset</span>
@@ -279,7 +321,8 @@
   </section>
 
   <!-- REVIEWS -->
-  <section id="arvostelut" class="fade-top" style="--from:#161310;--to:#0d0d0b;background:#0d0d0b;color:#f2ebdd;">
+  <section id="arvostelut" class="fade-top" style="background:#0d0d0b;color:#f2ebdd;">
+    <div class="sdiv"><span class="d-line"></span><span class="d-dot"></span><span class="d-line r"></span></div>
     <div style="max-width:1200px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);">
       <div style="text-align:center;margin-bottom:clamp(40px,5vw,64px);">
         <span class="eyebrow" style="color:#c77a54;" data-i18n="revEyebrow">Arvostelut</span>
@@ -297,7 +340,8 @@
   </section>
 
   <!-- EVENTS -->
-  <section id="tapahtumat" class="fade-top" style="--from:#0d0d0b;--to:#f2ebdd;background:#f2ebdd;color:#211d17;">
+  <section id="tapahtumat" class="fade-top" style="background:#f2ebdd;color:#211d17;">
+    <div class="sdiv"><span class="d-line"></span><span class="d-dot"></span><span class="d-line r"></span></div>
     <div style="max-width:1100px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:48px;">
         <div>
@@ -311,7 +355,8 @@
   </section>
 
   <!-- FOLLOW / SOCIAL + INSTAGRAM EMBEDS -->
-  <section id="seuraa" class="fade-top" style="--from:#f2ebdd;--to:#161310;background:#161310;color:#f2ebdd;">
+  <section id="seuraa" class="fade-top" style="background:#161310;color:#f2ebdd;">
+    <div class="sdiv"><span class="d-line"></span><span class="d-dot"></span><span class="d-line r"></span></div>
     <div style="max-width:1120px;margin:0 auto;padding:clamp(80px,10vw,120px) clamp(24px,5vw,56px);text-align:center;">
       <span class="eyebrow" style="color:#c77a54;" data-i18n="followEyebrow">Seuraa meitä</span>
       <h2 class="serif" style="font-weight:500;font-size:clamp(28px,3.4vw,46px);line-height:1.12;margin:16px auto 22px;" data-i18n="followTitle">Kesän kuulumiset somessa</h2>
@@ -330,7 +375,8 @@
   </section>
 
   <!-- CONTACT / MAP -->
-  <section id="yhteystiedot" class="fade-top" style="--from:#161310;--to:#0d0d0b;background:#0d0d0b;color:#f2ebdd;">
+  <section id="yhteystiedot" class="fade-top" style="background:#0d0d0b;color:#f2ebdd;">
+    <div class="sdiv"><span class="d-line"></span><span class="d-dot"></span><span class="d-line r"></span></div>
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,120px) clamp(24px,5vw,56px);display:grid;grid-template-columns:0.85fr 1.15fr;gap:clamp(36px,5vw,72px);align-items:stretch;">
       <div>
         <span class="eyebrow" style="color:#c77a54;" data-i18n="locEyebrow">Yhteystiedot</span>
