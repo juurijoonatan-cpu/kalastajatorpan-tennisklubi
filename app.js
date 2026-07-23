@@ -520,20 +520,24 @@
       if (started) return; started = true;
       refreshTexts(); renderChips(); addMsg(c().greeting, "bot");
     }
-    var idleT;
-    function wake() {
-      launch.classList.remove("tucked");
-      clearTimeout(idleT);
-      idleT = setTimeout(function () { if (!panel.classList.contains("open")) launch.classList.add("tucked"); }, 4500);
+    // the orb lives tucked at the right edge as a little pull-back handle, and
+    // slides fully into view only when you reach for the bottom-right corner
+    var tuckT;
+    function scheduleTuck(delay) {
+      clearTimeout(tuckT);
+      tuckT = setTimeout(function () {
+        if (!panel.classList.contains("open")) launch.classList.add("tucked");
+      }, delay == null ? 2200 : delay);
     }
+    function reveal() { clearTimeout(tuckT); launch.classList.remove("tucked"); }
     function open() {
       panel.classList.add("open"); panel.setAttribute("aria-hidden", "false");
-      clearTimeout(idleT); launch.classList.remove("tucked"); launch.classList.add("hide"); start();
+      reveal(); launch.classList.add("hide"); start();
       setTimeout(function () { try { input.focus(); } catch (e) {} }, 320);
     }
     function shut() {
       panel.classList.remove("open"); panel.setAttribute("aria-hidden", "true");
-      launch.classList.remove("hide"); wake();
+      launch.classList.remove("hide"); scheduleTuck(600);
     }
     var submit = function () { var v = input.value.trim(); if (!v) return; input.value = ""; ask(v); };
     launch.addEventListener("click", open);
@@ -542,18 +546,23 @@
     input.addEventListener("keydown", function (e) { if (e.key === "Enter") submit(); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && panel.classList.contains("open")) shut(); });
 
-    // the orb comes alive: eyes follow the cursor, an occasional blink, and it
-    // tucks sleekly off the right edge when the page is idle (slides back on activity)
+    // the orb comes alive: it peeks out when the cursor nears the corner, its eyes
+    // follow the cursor, and it blinks now and then
     var eyes = launch.querySelector(".orb-eyes");
-    if (eyes && window.matchMedia && window.matchMedia("(hover: hover)").matches) {
+    var inHot = false;
+    if (window.matchMedia && window.matchMedia("(hover: hover)").matches) {
       window.addEventListener("mousemove", function (e) {
-        if (launch.classList.contains("hide")) return;
-        var r = launch.getBoundingClientRect();
-        var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-        var a = Math.atan2(e.clientY - cy, e.clientX - cx);
-        var d = Math.min(1, Math.sqrt(Math.pow(e.clientX - cx, 2) + Math.pow(e.clientY - cy, 2)) / 420);
-        var sh = 3.6 * d;
-        eyes.style.transform = "translate(" + (Math.cos(a) * sh).toFixed(1) + "px," + (Math.sin(a) * sh).toFixed(1) + "px)";
+        var near = e.clientX >= window.innerWidth - 200 && e.clientY >= window.innerHeight - 210;
+        if (near) { if (!inHot) { inHot = true; reveal(); } }
+        else if (inHot) { inHot = false; scheduleTuck(1300); }
+        if (eyes && !launch.classList.contains("hide")) {
+          var r = launch.getBoundingClientRect();
+          var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+          var a = Math.atan2(e.clientY - cy, e.clientX - cx);
+          var d = Math.min(1, Math.sqrt(Math.pow(e.clientX - cx, 2) + Math.pow(e.clientY - cy, 2)) / 420);
+          var sh = 3.6 * d;
+          eyes.style.transform = "translate(" + (Math.cos(a) * sh).toFixed(1) + "px," + (Math.sin(a) * sh).toFixed(1) + "px)";
+        }
       }, { passive: true });
     }
     setInterval(function () {
@@ -561,10 +570,7 @@
       launch.classList.add("blink");
       setTimeout(function () { launch.classList.remove("blink"); }, 150);
     }, 5200);
-    ["mousemove", "scroll", "touchstart", "keydown"].forEach(function (ev) {
-      window.addEventListener(ev, wake, { passive: true });
-    });
-    wake();
+    scheduleTuck(2600); // settle in, then tuck to the edge
 
     // keep an open chat's chrome in sync with a language switch (messages stay)
     chatRelang = function () { if (started) { refreshTexts(); renderChips(); } };
