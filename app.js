@@ -520,24 +520,44 @@
       if (started) return; started = true;
       refreshTexts(); renderChips(); addMsg(c().greeting, "bot");
     }
-    // the orb lives tucked at the right edge as a little pull-back handle, and
-    // slides fully into view only when you reach for the bottom-right corner
+    // On a pointer device the orb lives tucked at the right edge as a pull-back
+    // handle that slides out when you reach for the corner. On touch there is no
+    // cursor to reveal it, so it must never tuck — it stays a plain visible button.
+    var canTuck = !(window.matchMedia && window.matchMedia("(hover: none)").matches);
     var tuckT;
     function scheduleTuck(delay) {
+      if (!canTuck) return;
       clearTimeout(tuckT);
       tuckT = setTimeout(function () {
         if (!panel.classList.contains("open")) launch.classList.add("tucked");
       }, delay == null ? 2200 : delay);
     }
     function reveal() { clearTimeout(tuckT); launch.classList.remove("tucked"); }
+    // On mobile the panel is a bottom sheet; keep it pinned to the *visible*
+    // viewport so the on-screen keyboard never covers the input.
+    function syncSheet() {
+      if (window.innerWidth > 560 || !window.visualViewport || !panel.classList.contains("open")) {
+        panel.style.height = ""; panel.style.bottom = ""; return;
+      }
+      var vv = window.visualViewport;
+      var overlap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop); // keyboard height
+      panel.style.bottom = overlap + "px";
+      panel.style.height = Math.round(vv.height * 0.9) + "px";
+    }
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", syncSheet);
+      window.visualViewport.addEventListener("scroll", syncSheet);
+    }
     function open() {
       panel.classList.add("open"); panel.setAttribute("aria-hidden", "false");
-      reveal(); launch.classList.add("hide"); start();
-      setTimeout(function () { try { input.focus(); } catch (e) {} }, 320);
+      reveal(); launch.classList.add("hide"); start(); syncSheet();
+      // don't auto-focus on touch — it would pop the keyboard before the user taps
+      if (canTuck) setTimeout(function () { try { input.focus(); } catch (e) {} }, 320);
     }
     function shut() {
       panel.classList.remove("open"); panel.setAttribute("aria-hidden", "true");
-      launch.classList.remove("hide"); scheduleTuck(600);
+      launch.classList.remove("hide"); panel.style.height = ""; panel.style.bottom = "";
+      scheduleTuck(600);
     }
     var submit = function () { var v = input.value.trim(); if (!v) return; input.value = ""; ask(v); };
     launch.addEventListener("click", open);

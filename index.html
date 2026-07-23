@@ -204,7 +204,19 @@
   .chat-input button:hover{background:#c05f38;}
   .chat-input button svg{width:16px;height:16px;}
   @media (max-width:560px){
-    #chat-panel{bottom:0;right:0;left:0;width:100%;height:82vh;border-radius:18px 18px 0 0;}
+    /* orb: a clean floating button — it never tucks on touch (there is no cursor
+       to reveal it), and it clears the home indicator */
+    #chat-launch{bottom:calc(16px + env(safe-area-inset-bottom));right:16px;width:56px;height:56px;}
+    #chat-launch.tucked{transform:none;opacity:1;animation:orb-bob 5.5s ease-in-out infinite;}
+    /* proper bottom sheet: slides up from the bottom, sits on the visible viewport
+       (JS fine-tunes height/offset to the visual viewport + keyboard), clears the
+       home bar. height falls back vh → dvh where supported. */
+    #chat-panel{top:auto;bottom:0;right:0;left:0;width:100%;height:82vh;height:88dvh;max-height:none;border-radius:20px 20px 0 0;transform:translateY(100%);transform-origin:bottom center;transition:transform .4s cubic-bezier(.34,1.2,.64,1),opacity .3s ease;}
+    #chat-panel.open{transform:translateY(0);}
+    .chat-input{padding-bottom:calc(12px + env(safe-area-inset-bottom));}
+    /* keep the cookie note out of the orb's corner */
+    #cookie{left:12px;right:84px;bottom:calc(14px + env(safe-area-inset-bottom));max-width:none;padding:14px 16px;}
+    #cookie span{font-size:12.5px;}
   }
 
   /* responsive */
