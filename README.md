@@ -13,8 +13,8 @@ Published with GitHub Pages — see the repository's **Settings → Pages** for 
 index.html            Markup + all styles (inline <style>)
 app.js                Content (FI/EN), language toggle, interactions, 3D ball
 assets/               Images, videos, logos, fonts loader
-  intro.mp4           Hero background + full intro video (with sound in the modal)
-  vendor/three.min.js Self-hosted Three.js (r128) for the 3D tennis ball
+  hero.mp4            Compressed, muted 1024px cut of the intro film (hero background)
+  intro.mp4           Full-quality intro video (with sound, played in the modal)
 ```
 
 ## Features
@@ -46,8 +46,8 @@ prices, opening hours, events, and reviews. Images are in `assets/`.
     no free native live-feed embed, so this grid links to the profile instead.
   - **Map markers** — marker positions (left/top %) are in the `.map-marker`
     buttons in index.html; nudge them if you want a more exact fit.
-- `assets/intro.mp4` is ~49 MB. If you want faster loading, re-encode it to a
-  smaller 720p/1080p version.
+- `assets/intro.mp4` (~49 MB) is only loaded when the intro modal is opened;
+  the hero background uses the pre-compressed `assets/hero.mp4` (~7.5 MB).
 
 ## Local preview
 
