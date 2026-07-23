@@ -361,14 +361,15 @@
      the repeating mask stays seamless on iOS Safari. */
   function initWaves() {
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var root = document.documentElement;
     var waves = $all(".wave-div");
     if (!waves.length) return;
     var PERIOD = 140, SPEED = 20, MX = 16; // px, px/sec, px
-    var mx = 0, mxTarget = 0, flow = 0, last = null, ptrY = -9999, ptrOn = false;
+    var mx = 0, mxTarget = 0, flow = 0, last = null, ptrX = -9999, ptrY = -9999, ptrOn = false;
     if (window.matchMedia && window.matchMedia("(hover: hover)").matches) {
       window.addEventListener("mousemove", function (e) {
         mxTarget = (e.clientX / window.innerWidth - 0.5) * 2 * MX;
-        ptrY = e.clientY; ptrOn = true;
+        ptrX = e.clientX; ptrY = e.clientY; ptrOn = true;
       }, { passive: true });
       document.addEventListener("mouseleave", function () { ptrOn = false; }, { passive: true });
     }
@@ -377,22 +378,27 @@
       if (e.gamma == null) return;
       mxTarget = Math.max(-25, Math.min(25, e.gamma)) / 25 * MX;
     }, { passive: true });
+    // per-wave current amplitude scale (eased toward the pointer-driven target)
+    var sy = []; for (var k = 0; k < waves.length; k++) sy[k] = 1;
     var frame = function (t) {
       if (last === null) last = t;
       var dt = Math.min(100, t - last) / 1000; last = t;
-      flow = (flow + SPEED * dt) % PERIOD;
+      flow = (flow + SPEED * dt) % PERIOD;          // steady horizontal drift — speed never changes
       mx += (mxTarget - mx) * 0.08;
-      var base = flow + mx;
+      root.style.setProperty("--wfx", (flow + mx).toFixed(2) + "px");
       for (var i = 0; i < waves.length; i++) {
-        var w = waves[i], boost = 0, line = 0.7;
+        var w = waves[i], target = 1, line = 0.65;
         if (ptrOn) {
           var r = w.getBoundingClientRect();
-          // proximity: 1 when the pointer sits right on the wave band, easing out over ~150px
-          var prox = Math.max(0, 1 - Math.abs((r.top + r.height / 2) - ptrY) / 150);
-          boost = prox * 34;         // the wave ripples faster where you hover
-          line = 0.7 + prox * 0.3;   // and its clay line brightens
+          // proximity 0..1 based on how close the pointer is to this wave band (both axes)
+          var dy = Math.abs((r.top + r.height / 2) - ptrY) / 130;
+          var dx = (ptrX < r.left - 120 || ptrX > r.right + 120) ? 1 : 0;
+          var prox = Math.max(0, 1 - Math.max(dy, dx));
+          target = 1 + prox * 1.1;      // the wave swells taller as the mouse nears it
+          line = 0.65 + prox * 0.35;
         }
-        w.style.setProperty("--wfx", (base + boost).toFixed(2) + "px");
+        sy[i] += (target - sy[i]) * 0.09;            // smooth easing — no jumpiness
+        w.style.setProperty("--wsy", sy[i].toFixed(3));
         w.style.setProperty("--wline", line.toFixed(2));
       }
       requestAnimationFrame(frame);
@@ -514,14 +520,20 @@
       if (started) return; started = true;
       refreshTexts(); renderChips(); addMsg(c().greeting, "bot");
     }
+    var idleT;
+    function wake() {
+      launch.classList.remove("tucked");
+      clearTimeout(idleT);
+      idleT = setTimeout(function () { if (!panel.classList.contains("open")) launch.classList.add("tucked"); }, 4500);
+    }
     function open() {
       panel.classList.add("open"); panel.setAttribute("aria-hidden", "false");
-      launch.classList.add("hide"); start();
+      clearTimeout(idleT); launch.classList.remove("tucked"); launch.classList.add("hide"); start();
       setTimeout(function () { try { input.focus(); } catch (e) {} }, 320);
     }
     function shut() {
       panel.classList.remove("open"); panel.setAttribute("aria-hidden", "true");
-      launch.classList.remove("hide");
+      launch.classList.remove("hide"); wake();
     }
     var submit = function () { var v = input.value.trim(); if (!v) return; input.value = ""; ask(v); };
     launch.addEventListener("click", open);
@@ -529,6 +541,31 @@
     send.addEventListener("click", submit);
     input.addEventListener("keydown", function (e) { if (e.key === "Enter") submit(); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && panel.classList.contains("open")) shut(); });
+
+    // the orb comes alive: eyes follow the cursor, an occasional blink, and it
+    // tucks sleekly off the right edge when the page is idle (slides back on activity)
+    var eyes = launch.querySelector(".orb-eyes");
+    if (eyes && window.matchMedia && window.matchMedia("(hover: hover)").matches) {
+      window.addEventListener("mousemove", function (e) {
+        if (launch.classList.contains("hide")) return;
+        var r = launch.getBoundingClientRect();
+        var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        var a = Math.atan2(e.clientY - cy, e.clientX - cx);
+        var d = Math.min(1, Math.sqrt(Math.pow(e.clientX - cx, 2) + Math.pow(e.clientY - cy, 2)) / 420);
+        var sh = 3.6 * d;
+        eyes.style.transform = "translate(" + (Math.cos(a) * sh).toFixed(1) + "px," + (Math.sin(a) * sh).toFixed(1) + "px)";
+      }, { passive: true });
+    }
+    setInterval(function () {
+      if (document.hidden || launch.classList.contains("hide")) return;
+      launch.classList.add("blink");
+      setTimeout(function () { launch.classList.remove("blink"); }, 150);
+    }, 5200);
+    ["mousemove", "scroll", "touchstart", "keydown"].forEach(function (ev) {
+      window.addEventListener(ev, wake, { passive: true });
+    });
+    wake();
+
     // keep an open chat's chrome in sync with a language switch (messages stay)
     chatRelang = function () { if (started) { refreshTexts(); renderChips(); } };
   }
