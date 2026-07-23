@@ -192,7 +192,7 @@
   }
 
   function renderSocials() {
-    var groups = [$("#socials-main"), $("#socials-contact"), $("#socials-footer")];
+    var groups = [$("#socials-main")];
     var html = SOCIALS.map(function (s) {
       return '<a class="social-ico" href="' + s.href + '" target="_blank" rel="noopener" aria-label="' + s.label + '" title="' + s.label + '">' + ICONS[s.key] + '</a>';
     }).join("");
@@ -308,19 +308,7 @@
     var vid = $("#hero-video");
     if (!vid) return;
     vid.muted = true;
-    // Skip the intro logo (first ~5s) and the outro logo (last ~6s) in the loop
-    var START = 5, TAIL = 10;
-    var trimmable = function () { return isFinite(vid.duration) && vid.duration > START + TAIL + 1; };
-    var seekStart = function () { try { if (trimmable() && vid.currentTime < START) vid.currentTime = START; } catch (e) {} };
-    vid.removeAttribute("loop");
-    vid.addEventListener("loadedmetadata", seekStart);
-    if (vid.readyState >= 1) seekStart();
     var tryPlay = function () { var p = vid.play(); if (p && p.catch) p.catch(function () {}); };
-    var loopBack = function () { try { vid.currentTime = START; } catch (e) {} tryPlay(); };
-    vid.addEventListener("timeupdate", function () {
-      if (trimmable() && vid.currentTime >= vid.duration - TAIL) loopBack();
-    });
-    vid.addEventListener("ended", loopBack);
     vid.addEventListener("canplay", tryPlay, { once: true });
     tryPlay();
     var kick = function () { if (vid.paused) tryPlay(); };
@@ -356,15 +344,6 @@
     if (ml) ml.addEventListener("click", function () { setLang(lang === "fi" ? "en" : "fi"); });
   }
 
-  function initDividers() {
-    var ds = $all(".sdiv");
-    if (!ds.length) return;
-    if (!("IntersectionObserver" in window)) { ds.forEach(function (d) { d.classList.add("in"); }); return; }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
-    }, { threshold: 0.55 });
-    ds.forEach(function (d) { io.observe(d); });
-  }
 
   /* ---------- Boot ---------- */
   function boot() {
@@ -378,7 +357,6 @@
     initRatingCounter();
     initMarkers();
     initMobileMenu();
-    initDividers();
     $("#lang-toggle").addEventListener("click", function () { setLang(lang === "fi" ? "en" : "fi"); });
   }
 
