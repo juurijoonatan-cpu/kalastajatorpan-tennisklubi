@@ -121,25 +121,23 @@
 
   /* Instagram — a single, small, cleanly framed embed (minimal) */
   .ig-single{display:flex;justify-content:center;margin-top:clamp(30px,3.5vw,44px);}
-  .ig-card{width:min(300px,84vw);border-radius:14px;overflow:hidden;box-shadow:0 24px 58px rgba(0,0,0,0.5);border:1px solid rgba(242,235,221,0.14);background:#fff;line-height:0;transition:transform .4s ease,box-shadow .4s ease;}
+  .ig-card{width:min(300px,84vw);min-height:200px;border-radius:14px;overflow:hidden;box-shadow:0 24px 58px rgba(0,0,0,0.5);border:1px solid rgba(242,235,221,0.14);background:#fff;line-height:0;transition:transform .4s ease,box-shadow .4s ease;}
   .ig-card:hover{transform:translateY(-5px);box-shadow:0 30px 72px rgba(0,0,0,0.6);}
   .ig-card .instagram-media{margin:0 !important;border:0 !important;box-shadow:none !important;border-radius:0 !important;min-width:0 !important;}
 
   /* animated section dividers — crisp edges + an accent line that draws in */
   .fade-top{position:relative;}
   .fade-top > *{position:relative;z-index:1;}
-  /* animated wave divider — the previous section's colour fills the whole band,
-     the section's own colour is masked to the area below the wave, so the two
-     colours meet exactly ON the wave (no straight seam), clay line rides the curve */
-  /* --wave-mx is a small horizontal offset driven by the pointer / device tilt
-     (see initWaveParallax); the band is widened past the viewport so the shift
-     never exposes an edge */
-  .wave-div{position:absolute;top:0;left:-48px;right:-48px;height:40px;transform:translate(var(--wave-mx,0px),-50%);transition:transform .55s cubic-bezier(.22,.61,.36,1);z-index:6;pointer-events:none;background:var(--wave-prev,#16281e);}
-  .wave-div::after{content:"";position:absolute;inset:0;background:var(--wave,#16281e);-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020%20L140%2040%20L0%2040%20Z'%20fill='%23000'/%3E%3C/svg%3E") repeat-x left bottom;mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020%20L140%2040%20L0%2040%20Z'%20fill='%23000'/%3E%3C/svg%3E") repeat-x left bottom;-webkit-mask-size:140px 40px;mask-size:140px 40px;animation:wave-fill 7s linear infinite;}
-  .wave-div::before{content:"";position:absolute;inset:0;z-index:1;background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020'%20fill='none'%20stroke='%23c88a52'%20stroke-width='2'%20stroke-linecap='round'/%3E%3C/svg%3E") repeat-x left bottom;background-size:140px 40px;opacity:.7;animation:wave-stroke 7s linear infinite;}
-  @keyframes wave-fill{to{-webkit-mask-position:140px bottom;mask-position:140px bottom;}}
-  @keyframes wave-stroke{to{background-position:140px bottom;}}
-  @media (prefers-reduced-motion:reduce){.wave-div::after,.wave-div::before{animation:none;}.wave-div{transition:none;}}
+  /* animated wave divider — the previous section's colour fills the band, the
+     section's own colour is masked below the wave, so the two colours meet
+     exactly ON the curve (no straight seam), clay line rides the same curve.
+     Horizontal motion (continuous flow + subtle pointer/tilt response) is driven
+     ONLY through mask-position via --wfx (set in initWaves) — never a transform,
+     so the repeating mask never shows tiling seams or bleed on iOS Safari.
+     overflow:hidden guarantees nothing paints past the 40px band. */
+  .wave-div{position:absolute;top:0;left:0;right:0;height:40px;transform:translateY(-50%);z-index:6;pointer-events:none;overflow:hidden;background:var(--wave-prev,#16281e);}
+  .wave-div::after{content:"";position:absolute;inset:0;background:var(--wave,#16281e);-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020%20L140%2040%20L0%2040%20Z'%20fill='%23000'/%3E%3C/svg%3E") repeat-x left bottom;mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020%20L140%2040%20L0%2040%20Z'%20fill='%23000'/%3E%3C/svg%3E") repeat-x left bottom;-webkit-mask-size:140px 40px;mask-size:140px 40px;-webkit-mask-position:var(--wfx,0px) bottom;mask-position:var(--wfx,0px) bottom;}
+  .wave-div::before{content:"";position:absolute;inset:0;z-index:1;background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020'%20fill='none'%20stroke='%23c88a52'%20stroke-width='2'%20stroke-linecap='round'/%3E%3C/svg%3E") repeat-x left bottom;background-size:140px 40px;background-position:var(--wfx,0px) bottom;opacity:.7;}
 
   /* video modal */
   #film-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(9,18,13,0.93);backdrop-filter:blur(6px);padding:clamp(16px,4vw,56px);}

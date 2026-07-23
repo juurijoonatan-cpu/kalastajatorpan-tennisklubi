@@ -304,29 +304,33 @@
     window.addEventListener("scroll", function () { if (window.scrollY > 40) fade(); }, { passive: true });
   }
 
-  /* subtle wave interactivity — the dividers drift horizontally with the
-     pointer (desktop) or device tilt (mobile); kept small and rAF-throttled */
-  function initWaveParallax() {
+  /* animated wave dividers — one shared rAF drives every divider's mask-position
+     through --wfx: a continuous flow plus a subtle, eased offset from the pointer
+     (desktop) or device tilt (mobile). Position-based, never transform-based, so
+     the repeating mask stays seamless on iOS Safari. */
+  function initWaves() {
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    var root = document.documentElement, MAX = 20, target = 0, current = 0, raf = null;
-    var apply = function () {
-      raf = null;
-      current += (target - current) * 0.18;
-      if (Math.abs(target - current) < 0.2) current = target;
-      root.style.setProperty("--wave-mx", current.toFixed(1) + "px");
-      if (current !== target) raf = requestAnimationFrame(apply);
-    };
-    var queue = function (v) { target = Math.max(-MAX, Math.min(MAX, v)); if (!raf) raf = requestAnimationFrame(apply); };
+    var root = document.documentElement, PERIOD = 140, SPEED = 20, MX = 16; // px, px/sec, px
+    var mx = 0, mxTarget = 0, flow = 0, last = null;
     if (window.matchMedia && window.matchMedia("(hover: hover)").matches) {
       window.addEventListener("mousemove", function (e) {
-        queue((e.clientX / window.innerWidth - 0.5) * 2 * MAX);
+        mxTarget = (e.clientX / window.innerWidth - 0.5) * 2 * MX;
       }, { passive: true });
     }
     // device tilt (best effort; no-ops where orientation isn't granted)
     window.addEventListener("deviceorientation", function (e) {
       if (e.gamma == null) return;
-      queue(Math.max(-25, Math.min(25, e.gamma)) / 25 * MAX);
+      mxTarget = Math.max(-25, Math.min(25, e.gamma)) / 25 * MX;
     }, { passive: true });
+    var frame = function (t) {
+      if (last === null) last = t;
+      var dt = Math.min(100, t - last) / 1000; last = t;
+      flow = (flow + SPEED * dt) % PERIOD;
+      mx += (mxTarget - mx) * 0.08;
+      root.style.setProperty("--wfx", (flow + mx).toFixed(2) + "px");
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
   }
 
   function initHeroVideo() {
@@ -379,7 +383,7 @@
     initFilmModal();
     initHeroVideo();
     initHeroReveal();
-    initWaveParallax();
+    initWaves();
     initRatingCounter();
     initMarkers();
     initMobileMenu();
