@@ -61,7 +61,7 @@
     ],
     followEyebrow: "Seuraa meitä", followTitle: "Kesän kuulumiset somessa",
     followBody: "Seuraa arkea kentiltä ja terassilta — kuvat, videot ja tapahtumat Instagramissa, YouTubessa ja Facebookissa.",
-    igSub: "Seuraa Instagramissa", igFollow: "Seuraa",
+    igSub: "Seuraa Instagramissa", igFollow: "Seuraa", igCta: "Seuraa @kalastajatorpantennisklubi",
     locEyebrow: "Yhteystiedot", locTitle: "Löydä perille",
     locAddress: "Osoite", locBooking: "Tuntivaraukset", locHours: "Aukioloajat", locSocial: "Somessa",
     footBlurb: "Perinteikäs ulkotenniskeskus Munkkiniemessä, meren äärellä. Massatennistä on pelattu Torpalla vuodesta 1938. Klubilla toimii LTC-33 r.f., yksi Suomen vanhimmista tennisseuroista.",
@@ -117,7 +117,7 @@
     ],
     followEyebrow: "Follow us", followTitle: "Summer moments on social",
     followBody: "Follow life on the courts and the terrace — photos, videos and events on Instagram, YouTube and Facebook.",
-    igSub: "Follow on Instagram", igFollow: "Follow",
+    igSub: "Follow on Instagram", igFollow: "Follow", igCta: "Follow @kalastajatorpantennisklubi",
     locEyebrow: "Contact", locTitle: "Find your way here",
     locAddress: "Address", locBooking: "Court bookings", locHours: "Opening hours", locSocial: "On social",
     footBlurb: "A storied outdoor tennis centre in Munkkiniemi, by the sea. Clay tennis has been played here since 1938. The club is home to LTC-33 r.f., one of Finland’s oldest tennis clubs.",
@@ -281,6 +281,17 @@
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && modal.classList.contains("open")) close(); });
   }
 
+  function initHeroReveal() {
+    var copy = $("#hero-copy");
+    if (!copy) return;
+    // show the title/logo for a moment, then let it fade so the film plays clean
+    var faded = false;
+    var fade = function () { if (!faded) { faded = true; copy.classList.add("faded"); } };
+    setTimeout(fade, 4800);
+    // if the visitor starts scrolling away, fade immediately
+    window.addEventListener("scroll", function () { if (window.scrollY > 40) fade(); }, { passive: true });
+  }
+
   function initHeroVideo() {
     var vid = $("#hero-video");
     if (!vid) return;
@@ -300,6 +311,7 @@
     initCookie();
     initFilmModal();
     initHeroVideo();
+    initHeroReveal();
     initRatingCounter();
     $("#lang-toggle").addEventListener("click", function () { setLang(lang === "fi" ? "en" : "fi"); });
   }

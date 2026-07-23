@@ -38,9 +38,13 @@
 
   /* hero */
   #top{position:relative;height:100vh;min-height:640px;overflow:hidden;background:#0d0d0b;}
-  #hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
-  .hero-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,13,8,0.44) 0%,rgba(18,13,8,0.16) 34%,rgba(12,9,6,0.34) 62%,rgba(10,8,6,0.82) 100%);}
+  #hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.09);transform-origin:52% 42%;}
+  .hero-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,13,8,0.5) 0%,rgba(18,13,8,0.2) 32%,rgba(12,9,6,0.4) 60%,rgba(9,7,5,0.96) 100%);}
+  /* extra vignette to mute the video's baked-in corner logo */
+  .hero-scrim2{position:absolute;inset:0;pointer-events:none;background:radial-gradient(130% 90% at 82% 96%,rgba(9,7,5,0.72) 0%,rgba(9,7,5,0) 46%);}
   .hero-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:96px 28px 120px;z-index:2;}
+  .hero-copy{display:flex;flex-direction:column;align-items:center;transition:opacity 1.2s ease,transform 1.2s ease;}
+  .hero-copy.faded{opacity:0;transform:translateY(-22px);pointer-events:none;}
   .hero-logo{width:clamp(84px,8vw,120px);height:auto;margin-bottom:18px;filter:drop-shadow(0 4px 26px rgba(0,0,0,0.45));}
   .hero-title{font-family:'Playfair Display',serif;font-weight:500;font-size:clamp(30px,4.6vw,62px);line-height:1.05;letter-spacing:.01em;text-transform:uppercase;max-width:15ch;margin:0;color:#f6f0e4;text-shadow:0 2px 40px rgba(0,0,0,0.55);}
   .hero-sub{margin:20px 0 0;font-size:clamp(13px,1.4vw,17px);font-weight:300;letter-spacing:.02em;color:rgba(246,240,228,0.92);max-width:46ch;line-height:1.6;text-shadow:0 1px 18px rgba(0,0,0,0.6);}
@@ -102,12 +106,19 @@
   @keyframes mk-pulse{0%{transform:scale(0.72);opacity:.85;}100%{transform:scale(1.75);opacity:0;}}
   @media (prefers-reduced-motion:reduce){.ball-marker .seam{animation:none;}}
 
-  /* Instagram embeds row */
-  .ig-embeds{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;align-items:flex-start;margin-top:clamp(34px,4vw,52px);}
-  .ig-embeds .instagram-media{margin:0 !important;}
+  /* Instagram embeds — framed as designed cards */
+  .ig-embeds{display:flex;flex-wrap:wrap;gap:clamp(16px,2vw,26px);justify-content:center;align-items:stretch;margin-top:clamp(34px,4vw,52px);}
+  .ig-card{border-radius:16px;overflow:hidden;box-shadow:0 26px 64px rgba(0,0,0,0.5);border:1px solid rgba(242,235,221,0.14);background:#fff;transition:transform .4s ease,box-shadow .4s ease;line-height:0;}
+  .ig-card:hover{transform:translateY(-6px);box-shadow:0 34px 82px rgba(0,0,0,0.62);}
+  .ig-card .instagram-media{margin:0 !important;border:0 !important;box-shadow:none !important;border-radius:0 !important;}
+  .ig-cta{display:inline-flex;align-items:center;gap:10px;margin-top:clamp(28px,3.5vw,42px);background:transparent;border:1px solid rgba(242,235,221,0.4);color:#f2ebdd;padding:13px 26px;border-radius:999px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:background .3s ease,border-color .3s ease,transform .3s ease;}
+  .ig-cta:hover{background:#a94e2b;border-color:#a94e2b;transform:translateY(-2px);}
+  .ig-cta svg{width:16px;height:16px;}
 
-  /* smooth section fades */
-  .sec-blend{width:100%;height:clamp(72px,9vw,132px);}
+  /* smooth section fades — top edge eases from the previous section's colour */
+  .fade-top{position:relative;}
+  .fade-top::before{content:"";position:absolute;top:0;left:0;right:0;height:clamp(90px,11vw,150px);background:linear-gradient(180deg,var(--from) 0%,var(--to) 100%);pointer-events:none;z-index:0;}
+  .fade-top > *{position:relative;z-index:1;}
 
   /* video modal */
   #film-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(6,5,4,0.92);backdrop-filter:blur(6px);padding:clamp(16px,4vw,56px);}
@@ -165,10 +176,13 @@
       <source src="./assets/intro.mp4" type="video/mp4">
     </video>
     <div class="hero-scrim"></div>
+    <div class="hero-scrim2"></div>
     <div class="hero-inner">
-      <img class="hero-logo" src="./assets/logo-light.png" alt="Kalastajatorpan Tennisklubi">
-      <h1 class="hero-title" data-i18n="heroTitle">Massatennistä meren äärellä<br>vuodesta 1938</h1>
-      <p class="hero-sub" data-i18n="heroSub">Perinteikäs ulkotenniskeskus Munkkiniemen puistossa, meren rannassa.</p>
+      <div class="hero-copy" id="hero-copy">
+        <img class="hero-logo" src="./assets/logo-light.png" alt="Kalastajatorpan Tennisklubi">
+        <h1 class="hero-title" data-i18n="heroTitle">Massatennistä meren äärellä<br>vuodesta 1938</h1>
+        <p class="hero-sub" data-i18n="heroSub">Perinteikäs ulkotenniskeskus Munkkiniemen puistossa, meren rannassa.</p>
+      </div>
       <div class="hero-actions">
         <button class="film-btn" id="open-film" aria-label="Katso intro">
           <span class="play-badge">
@@ -183,10 +197,8 @@
     </div>
   </section>
 
-  <div class="sec-blend" style="background:linear-gradient(180deg,#0d0d0b,#f2ebdd);"></div>
-
   <!-- INTRO / KLUBI -->
-  <section id="klubi" style="background:#f2ebdd;color:#211d17;">
+  <section id="klubi" class="fade-top" style="--from:#0a0806;--to:#f2ebdd;background:#f2ebdd;color:#211d17;">
     <div style="max-width:1000px;margin:0 auto;padding:clamp(90px,12vw,150px) clamp(24px,5vw,56px);text-align:center;">
       <span class="eyebrow" style="color:#a94e2b;" data-i18n="introEyebrow">Klubi vuodesta 1938</span>
       <h2 class="serif" style="font-weight:500;font-size:clamp(30px,4.2vw,58px);line-height:1.16;margin:26px auto 0;max-width:18ch;text-wrap:balance;" data-i18n="introTitle">Munkkiniemen sydämessä, meren äärellä</h2>
@@ -195,10 +207,8 @@
     </div>
   </section>
 
-  <div class="sec-blend" style="background:linear-gradient(180deg,#f2ebdd,#0d0d0b);"></div>
-
   <!-- COURTS -->
-  <section id="kentat" style="position:relative;background:#0d0d0b;">
+  <section id="kentat" class="fade-top" style="--from:#f2ebdd;--to:#0d0d0b;position:relative;background:#0d0d0b;">
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,84px);align-items:center;">
       <div class="map-figure">
         <img src="./assets/aerial.jpg" alt="Ilmakuva massakentistä" style="width:100%;height:auto;display:block;border-radius:3px;box-shadow:0 30px 80px rgba(0,0,0,0.5);">
@@ -234,10 +244,8 @@
     </div>
   </section>
 
-  <div class="sec-blend" style="background:linear-gradient(180deg,#0d0d0b,#f2ebdd);"></div>
-
   <!-- RESTAURANT -->
-  <section id="ravintola" style="background:#f2ebdd;color:#211d17;">
+  <section id="ravintola" class="fade-top" style="--from:#0d0d0b;--to:#f2ebdd;background:#f2ebdd;color:#211d17;">
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);display:grid;grid-template-columns:1.05fr 0.95fr;gap:clamp(40px,6vw,84px);align-items:center;">
       <div>
         <span class="eyebrow" style="color:#a94e2b;" data-i18n="restEyebrow">Klubiravintola</span>
@@ -249,10 +257,8 @@
     </div>
   </section>
 
-  <div class="sec-blend" style="background:linear-gradient(180deg,#f2ebdd,#161310);"></div>
-
   <!-- BOOKING / PRICING -->
-  <section id="varaukset" style="background:#161310;color:#f2ebdd;border-top:1px solid rgba(242,235,221,0.08);">
+  <section id="varaukset" class="fade-top" style="--from:#f2ebdd;--to:#161310;background:#161310;color:#f2ebdd;">
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,84px);">
       <div>
         <span class="eyebrow" style="color:#c77a54;" data-i18n="bookEyebrow">Varaukset</span>
@@ -273,7 +279,7 @@
   </section>
 
   <!-- REVIEWS -->
-  <section id="arvostelut" style="background:#0d0d0b;color:#f2ebdd;border-top:1px solid rgba(242,235,221,0.08);">
+  <section id="arvostelut" class="fade-top" style="--from:#161310;--to:#0d0d0b;background:#0d0d0b;color:#f2ebdd;">
     <div style="max-width:1200px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);">
       <div style="text-align:center;margin-bottom:clamp(40px,5vw,64px);">
         <span class="eyebrow" style="color:#c77a54;" data-i18n="revEyebrow">Arvostelut</span>
@@ -290,10 +296,8 @@
     </div>
   </section>
 
-  <div class="sec-blend" style="background:linear-gradient(180deg,#0d0d0b,#f2ebdd);"></div>
-
   <!-- EVENTS -->
-  <section id="tapahtumat" style="background:#f2ebdd;color:#211d17;">
+  <section id="tapahtumat" class="fade-top" style="--from:#0d0d0b;--to:#f2ebdd;background:#f2ebdd;color:#211d17;">
     <div style="max-width:1100px;margin:0 auto;padding:clamp(80px,10vw,130px) clamp(24px,5vw,56px);">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:48px;">
         <div>
@@ -306,10 +310,8 @@
     </div>
   </section>
 
-  <div class="sec-blend" style="background:linear-gradient(180deg,#f2ebdd,#161310);"></div>
-
   <!-- FOLLOW / SOCIAL + INSTAGRAM EMBEDS -->
-  <section id="seuraa" style="background:#161310;color:#f2ebdd;">
+  <section id="seuraa" class="fade-top" style="--from:#f2ebdd;--to:#161310;background:#161310;color:#f2ebdd;">
     <div style="max-width:1120px;margin:0 auto;padding:clamp(80px,10vw,120px) clamp(24px,5vw,56px);text-align:center;">
       <span class="eyebrow" style="color:#c77a54;" data-i18n="followEyebrow">Seuraa meitä</span>
       <h2 class="serif" style="font-weight:500;font-size:clamp(28px,3.4vw,46px);line-height:1.12;margin:16px auto 22px;" data-i18n="followTitle">Kesän kuulumiset somessa</h2>
@@ -317,14 +319,18 @@
       <div class="socials center" id="socials-main"></div>
       <!-- Live Instagram embeds (rendered by embed.js). Swap the permalinks to feature other posts. -->
       <div class="ig-embeds">
-        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOIt2pjjMw-/" data-instgrm-version="14" style="max-width:340px;min-width:300px;width:100%;margin:0;background:#FFF;border-radius:3px;"></blockquote>
-        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DYl4Pm1gkuZ/" data-instgrm-version="14" style="max-width:340px;min-width:300px;width:100%;margin:0;background:#FFF;border-radius:3px;"></blockquote>
+        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOIt2pjjMw-/" data-instgrm-version="14" style="max-width:340px;min-width:300px;width:100%;margin:0;border:0;"></blockquote></div>
+        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DYl4Pm1gkuZ/" data-instgrm-version="14" style="max-width:340px;min-width:300px;width:100%;margin:0;border:0;"></blockquote></div>
       </div>
+      <a class="ig-cta" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>
+        <span data-i18n="igCta">Seuraa @kalastajatorpantennisklubi</span>
+      </a>
     </div>
   </section>
 
   <!-- CONTACT / MAP -->
-  <section id="yhteystiedot" style="background:#0d0d0b;color:#f2ebdd;border-top:1px solid rgba(242,235,221,0.08);">
+  <section id="yhteystiedot" class="fade-top" style="--from:#161310;--to:#0d0d0b;background:#0d0d0b;color:#f2ebdd;">
     <div class="two-col" style="max-width:1280px;margin:0 auto;padding:clamp(80px,10vw,120px) clamp(24px,5vw,56px);display:grid;grid-template-columns:0.85fr 1.15fr;gap:clamp(36px,5vw,72px);align-items:stretch;">
       <div>
         <span class="eyebrow" style="color:#c77a54;" data-i18n="locEyebrow">Yhteystiedot</span>
