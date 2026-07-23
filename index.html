@@ -41,12 +41,21 @@
   /* hero */
   #top{position:relative;height:100vh;min-height:640px;overflow:hidden;background:#16281e;}
   #hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.09);transform-origin:52% 42%;}
-  .hero-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,30,22,0.5) 0%,rgba(16,30,22,0.2) 32%,rgba(13,26,19,0.4) 60%,rgba(11,22,16,0.96) 100%);}
-  /* extra vignette to mute the video's baked-in corner logo */
-  .hero-scrim2{position:absolute;inset:0;pointer-events:none;background:radial-gradient(130% 90% at 82% 96%,rgba(11,22,16,0.72) 0%,rgba(11,22,16,0) 46%);}
+  /* the scrim resolves to the exact section colour (#16281e) before the bottom,
+     so the wave divider below meets a flat green edge with no lighter sliver */
+  .hero-scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,30,22,0.5) 0%,rgba(16,30,22,0.18) 30%,rgba(19,34,25,0.55) 60%,#16281e 90%);}
+  /* extra vignette to mute the video's baked-in corner logo — kept clear of the
+     bottom 14% so it never darkens the flat green edge the wave rises from */
+  .hero-scrim2{position:absolute;top:0;left:0;right:0;bottom:14%;pointer-events:none;background:radial-gradient(120% 80% at 82% 78%,rgba(11,22,16,0.7) 0%,rgba(11,22,16,0) 48%);}
   .hero-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:96px 28px 120px;z-index:2;}
-  .hero-copy{display:flex;flex-direction:column;align-items:center;transition:opacity 1.2s ease,transform 1.2s ease;}
-  .hero-copy.faded{opacity:0;transform:translateY(-22px);pointer-events:none;}
+  .hero-copy{display:flex;flex-direction:column;align-items:center;}
+  .hero-copy.faded{pointer-events:none;}
+  /* progressive vanish — each element drifts up, blurs and fades, staggered
+     bottom-to-top (subtitle first, logo last) for an unhurried, refined exit */
+  .hero-copy > *{transition:opacity 1.5s ease,transform 1.5s ease,filter 1.5s ease;}
+  .hero-copy.faded .hero-sub{opacity:0;transform:translateY(-14px);filter:blur(5px);transition-delay:0s;}
+  .hero-copy.faded .hero-title{opacity:0;transform:translateY(-16px);filter:blur(6px);transition-delay:.22s;}
+  .hero-copy.faded .hero-logo{opacity:0;transform:translateY(-18px);filter:blur(6px);transition-delay:.44s;}
   .hero-logo{width:clamp(84px,8vw,120px);height:auto;margin-bottom:18px;filter:drop-shadow(0 4px 26px rgba(0,0,0,0.45));}
   .hero-title{font-family:'Playfair Display',serif;font-weight:500;font-size:clamp(30px,4.6vw,62px);line-height:1.05;letter-spacing:.01em;text-transform:uppercase;max-width:15ch;margin:0;color:#f6f0e4;text-shadow:0 2px 40px rgba(0,0,0,0.55);}
   .hero-sub{margin:20px 0 0;font-size:clamp(13px,1.4vw,17px);font-weight:300;letter-spacing:.02em;color:rgba(246,240,228,0.92);max-width:46ch;line-height:1.6;text-shadow:0 1px 18px rgba(0,0,0,0.6);}
@@ -110,18 +119,11 @@
   .ball-marker .mk-tip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#16281e;}
   .ball-marker:hover .mk-tip,.ball-marker.open .mk-tip,.ball-marker:focus-visible .mk-tip{opacity:1;transform:translateX(-50%) translateY(0);}
 
-  /* Instagram embeds — auto-scrolling marquee strip, like the photo strip */
-  .ig-marquee{overflow:hidden;margin-top:clamp(34px,4vw,52px);}
-  .ig-track{display:flex;align-items:flex-start;width:max-content;animation:ig-marquee 70s linear infinite;}
-  .ig-track:hover{animation-play-state:paused;}
-  /* content is 4 identical pairs + per-card right margin → one pair = exactly 25% */
-  @keyframes ig-marquee{to{transform:translateX(-25%);}}
-  .ig-card{width:min(340px,78vw);flex:0 0 auto;margin-right:clamp(16px,2vw,26px);border-radius:16px;overflow:hidden;box-shadow:0 26px 64px rgba(0,0,0,0.5);border:1px solid rgba(242,235,221,0.14);background:#fff;line-height:0;}
-  .ig-card .instagram-media{margin:0 !important;border:0 !important;box-shadow:none !important;border-radius:0 !important;}
-  @media (prefers-reduced-motion:reduce){.ig-track{animation:none;}.ig-marquee{overflow-x:auto;}}
-  .ig-cta{display:inline-flex;align-items:center;gap:10px;margin-top:clamp(28px,3.5vw,42px);background:transparent;border:1px solid rgba(242,235,221,0.4);color:#f2ebdd;padding:13px 26px;border-radius:999px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:background .3s ease,border-color .3s ease,transform .3s ease;}
-  .ig-cta:hover{background:#a94e2b;border-color:#a94e2b;transform:translateY(-2px);}
-  .ig-cta svg{width:16px;height:16px;}
+  /* Instagram — a single, small, cleanly framed embed (minimal) */
+  .ig-single{display:flex;justify-content:center;margin-top:clamp(30px,3.5vw,44px);}
+  .ig-card{width:min(300px,84vw);border-radius:14px;overflow:hidden;box-shadow:0 24px 58px rgba(0,0,0,0.5);border:1px solid rgba(242,235,221,0.14);background:#fff;line-height:0;transition:transform .4s ease,box-shadow .4s ease;}
+  .ig-card:hover{transform:translateY(-5px);box-shadow:0 30px 72px rgba(0,0,0,0.6);}
+  .ig-card .instagram-media{margin:0 !important;border:0 !important;box-shadow:none !important;border-radius:0 !important;min-width:0 !important;}
 
   /* animated section dividers — crisp edges + an accent line that draws in */
   .fade-top{position:relative;}
@@ -129,12 +131,15 @@
   /* animated wave divider — the previous section's colour fills the whole band,
      the section's own colour is masked to the area below the wave, so the two
      colours meet exactly ON the wave (no straight seam), clay line rides the curve */
-  .wave-div{position:absolute;top:0;left:0;right:0;height:40px;transform:translateY(-50%);z-index:6;pointer-events:none;background:var(--wave-prev,#16281e);}
+  /* --wave-mx is a small horizontal offset driven by the pointer / device tilt
+     (see initWaveParallax); the band is widened past the viewport so the shift
+     never exposes an edge */
+  .wave-div{position:absolute;top:0;left:-48px;right:-48px;height:40px;transform:translate(var(--wave-mx,0px),-50%);transition:transform .55s cubic-bezier(.22,.61,.36,1);z-index:6;pointer-events:none;background:var(--wave-prev,#16281e);}
   .wave-div::after{content:"";position:absolute;inset:0;background:var(--wave,#16281e);-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020%20L140%2040%20L0%2040%20Z'%20fill='%23000'/%3E%3C/svg%3E") repeat-x left bottom;mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020%20L140%2040%20L0%2040%20Z'%20fill='%23000'/%3E%3C/svg%3E") repeat-x left bottom;-webkit-mask-size:140px 40px;mask-size:140px 40px;animation:wave-fill 7s linear infinite;}
   .wave-div::before{content:"";position:absolute;inset:0;z-index:1;background:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20140%2040'%3E%3Cpath%20d='M0%2020%20C23%2010%2047%2010%2070%2020%20S117%2030%20140%2020'%20fill='none'%20stroke='%23c88a52'%20stroke-width='2'%20stroke-linecap='round'/%3E%3C/svg%3E") repeat-x left bottom;background-size:140px 40px;opacity:.7;animation:wave-stroke 7s linear infinite;}
   @keyframes wave-fill{to{-webkit-mask-position:140px bottom;mask-position:140px bottom;}}
   @keyframes wave-stroke{to{background-position:140px bottom;}}
-  @media (prefers-reduced-motion:reduce){.wave-div::after,.wave-div::before{animation:none;}}
+  @media (prefers-reduced-motion:reduce){.wave-div::after,.wave-div::before{animation:none;}.wave-div{transition:none;}}
 
   /* video modal */
   #film-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(9,18,13,0.93);backdrop-filter:blur(6px);padding:clamp(16px,4vw,56px);}
@@ -220,7 +225,7 @@
     <!-- hero.mp4 is a compressed, muted 1024px cut of the intro film (assets/intro.mp4);
          the ?v= query busts stale caches on devices that still hold the old clip -->
     <video id="hero-video" autoplay muted loop playsinline preload="auto" poster="./assets/courts-spring.jpg">
-      <source src="./assets/hero.mp4?v=2" type="video/mp4">
+      <source src="./assets/hero.mp4?v=3" type="video/mp4">
     </video>
     <div class="hero-scrim"></div>
     <div class="hero-scrim2"></div>
@@ -364,32 +369,15 @@
   <!-- FOLLOW / SOCIAL + INSTAGRAM EMBEDS -->
   <section id="seuraa" class="fade-top" style="--wave:#1c3226;--wave-prev:#f2ebdd;background:#1c3226;color:#f2ebdd;">
     <div class="wave-div"></div>
-    <div style="max-width:1120px;margin:0 auto;padding:clamp(80px,10vw,120px) clamp(24px,5vw,56px) 0;text-align:center;">
+    <div style="max-width:1120px;margin:0 auto;padding:clamp(80px,10vw,120px) clamp(24px,5vw,56px);text-align:center;">
       <span class="eyebrow" style="color:#c77a54;" data-i18n="followEyebrow">Seuraa meitä</span>
       <h2 class="serif" style="font-weight:500;font-size:clamp(28px,3.4vw,46px);line-height:1.12;margin:16px auto 22px;" data-i18n="followTitle">Kesän kuulumiset somessa</h2>
       <p style="font-size:16px;line-height:1.9;color:#c7c1b5;font-weight:300;margin:0 auto 28px;max-width:52ch;" data-i18n="followBody">Seuraa arkea kentiltä ja terassilta — kuvat, videot ja tapahtumat Instagramissa, YouTubessa ja Facebookissa.</p>
       <div class="socials center" id="socials-main"></div>
-    </div>
-    <!-- Live Instagram embeds (rendered by embed.js) in a full-bleed auto-scrolling strip.
-         The pair of permalinks is repeated 4× so the loop wraps seamlessly; swap the
-         permalinks (in every copy) to feature other posts. -->
-    <div class="ig-marquee">
-      <div class="ig-track">
-        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOIt2pjjMw-/" data-instgrm-version="14" style="max-width:340px;min-width:280px;width:100%;margin:0;border:0;"></blockquote></div>
-        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DYl4Pm1gkuZ/" data-instgrm-version="14" style="max-width:340px;min-width:280px;width:100%;margin:0;border:0;"></blockquote></div>
-        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOIt2pjjMw-/" data-instgrm-version="14" style="max-width:340px;min-width:280px;width:100%;margin:0;border:0;"></blockquote></div>
-        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DYl4Pm1gkuZ/" data-instgrm-version="14" style="max-width:340px;min-width:280px;width:100%;margin:0;border:0;"></blockquote></div>
-        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOIt2pjjMw-/" data-instgrm-version="14" style="max-width:340px;min-width:280px;width:100%;margin:0;border:0;"></blockquote></div>
-        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DYl4Pm1gkuZ/" data-instgrm-version="14" style="max-width:340px;min-width:280px;width:100%;margin:0;border:0;"></blockquote></div>
-        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOIt2pjjMw-/" data-instgrm-version="14" style="max-width:340px;min-width:280px;width:100%;margin:0;border:0;"></blockquote></div>
-        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DYl4Pm1gkuZ/" data-instgrm-version="14" style="max-width:340px;min-width:280px;width:100%;margin:0;border:0;"></blockquote></div>
+      <!-- Single live Instagram embed (rendered by embed.js). Swap the permalink to feature another post. -->
+      <div class="ig-single">
+        <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DOIt2pjjMw-/" data-instgrm-version="14" style="max-width:300px;min-width:0;width:100%;margin:0;border:0;"></blockquote></div>
       </div>
-    </div>
-    <div style="max-width:1120px;margin:0 auto;padding:0 clamp(24px,5vw,56px) clamp(80px,10vw,120px);text-align:center;">
-      <a class="ig-cta" href="https://www.instagram.com/kalastajatorpantennisklubi/" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>
-        <span data-i18n="igCta">Seuraa @kalastajatorpantennisklubi</span>
-      </a>
     </div>
   </section>
 
